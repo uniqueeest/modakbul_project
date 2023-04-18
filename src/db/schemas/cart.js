@@ -1,14 +1,19 @@
 const { Schema } = require('mongoose');
 
-//회의에서 진행된 cart_schema 입니다.
-
+//장바구니 페이지에 보여질 상품에 대한 스키마 정리입니다.
 const CartSchema = new Schema({
-    //product는 Product_Schema에서 Name, Price, Company, Stock을 받아옵니다.
-    product: [{
-        type: mongoose.Types.ObjectId,
+    name: {
+        type: String,
         required: true,
-        ref: 'Product',
-    }],
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    company: {
+        type: String,
+        required: true,
+    },
     //quantity는 주문할 갯수를 설정합니다.
     quantity: {
         type: Number,
@@ -16,4 +21,4 @@ const CartSchema = new Schema({
     },
 });
 
-module.exports = CartSchema
+module.exports = CartSchema;

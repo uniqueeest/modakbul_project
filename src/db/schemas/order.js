@@ -1,5 +1,4 @@
-const { Schema } = require("mongoose");
-const { Cart } = '../models/cart-model'
+const { Schema } = require('mongoose');
 
 //회의에서 진행된 order_schema 입니다.
 const OrderSchema = new Schema({
@@ -18,12 +17,6 @@ const OrderSchema = new Schema({
         type: String,
         required: true,
     },
-    //cartSchema를 가져와 배열을 나열합니다.
-    cart: [{
-        type: mongoose.Types.ObjectId,
-        required: true,
-        ref: 'Cart',
-    }],
     status: {
         type: String,
         required: true,
