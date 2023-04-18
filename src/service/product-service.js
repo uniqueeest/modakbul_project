@@ -43,4 +43,6 @@ const addProduct = async(productInfo) => {
     }
 }
 
+
+
 module.exports = {addProduct};
