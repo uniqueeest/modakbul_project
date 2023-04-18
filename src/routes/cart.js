@@ -16,7 +16,7 @@ CartRouter.delete('/api/:user/cart', async (req, res)=> {
 })
 
 //갯수 수정 라우터
-CartRouter.update('/api/:user/cart', async (req, res)=> {
+CartRouter.put('/api/:user/cart', async (req, res)=> {
     const quntInfo = req.body;
 
     try {

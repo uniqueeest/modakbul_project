@@ -1,5 +1,9 @@
 const bcrypt = require('bcrypt');
 const { Cart } = require('./db/models/cart-model');
+const { Product } = require('./db/models/product-model');
+//장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
+
+
 
 //장바구니 목록 삭제
 const cancerCart = async (cartInfo)=> {
@@ -34,6 +38,8 @@ const changeQuantity = async (quntInfo)=> {
     });
     if (newQuantity.nModified === 0) {
         throw new Error('수량 변경에 실패하였습니다.');
+    } else if (newQuantity.nModified > Product.stock ){
+        throw new Error('재고보다 많은 수량을 구매할 수 없습니다.')
     }
     return newQuantity;
 };
