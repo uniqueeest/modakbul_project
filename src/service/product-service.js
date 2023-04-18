@@ -16,6 +16,7 @@ const addProduct = async(productInfo) => {
             stock
         } = productInfo;
 
+        // 상품 이름 중복 체크
         const nameDuplicate = await Product.findOne({name});
 
         if(nameDuplicate) {

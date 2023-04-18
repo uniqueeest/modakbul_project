@@ -2,7 +2,7 @@ const { Router } = require('express');
 const ProductService = require('../service/product-service');
 const productRouter = Router();
 
-productRouter.post('/add', async (req, res) => {
+productRouter.post('/api/products', async (req, res) => {
     const productInfo = req.body;
 
     try {
