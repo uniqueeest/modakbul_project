@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Cart } from '../models/cart_model'
+import { Cart } from '../models/cart-model'
 
 //회의에서 진행된 order_schema 입니다.
 const orderSchema = new mongoose.Schema({
