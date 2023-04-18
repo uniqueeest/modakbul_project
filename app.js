@@ -1,6 +1,6 @@
 const https = require("https");
 const express = require("express");
-const config = require("./config");
+const config = require("./src/config");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
