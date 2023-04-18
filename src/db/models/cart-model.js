@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
-import { cartSchema } from '../schemas/cart'
+const mongoose = require('mongoose');
+const CartSchema = require('../schemas/cart');
 
 //Cart 모델 생성
-const Cart = mongoose.model('Cart', cartSchema);
-
-export { Cart };
+exports.Cart = mongoose.model('Cart', CartSchema);

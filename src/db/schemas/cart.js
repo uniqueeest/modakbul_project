@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+const { Schema } = require('mongoose');
 
 //회의에서 진행된 cart_schema 입니다.
 
-const cartSchema = new mongoose.Schema({
+const CartSchema = new Schema({
     //product는 Product_Schema에서 Name, Price, Company, Stock을 받아옵니다.
     product: [{
         type: mongoose.Types.ObjectId,
@@ -16,4 +16,4 @@ const cartSchema = new mongoose.Schema({
     },
 });
 
-export { cartSchema };
+module.exports = CartSchema

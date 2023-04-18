@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import { Cart } from '../models/cart-model'
+const { Schema } = require("mongoose");
+const { Cart } = '../models/cart-model'
 
 //회의에서 진행된 order_schema 입니다.
-const orderSchema = new mongoose.Schema({
+const OrderSchema = new Schema({
     email: {
         type: String,
     },
@@ -34,4 +34,4 @@ const orderSchema = new mongoose.Schema({
     },
 })
 
-export { orderSchema };
+module.exports = OrderSchema;
