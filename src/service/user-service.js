@@ -38,7 +38,7 @@ const userSignUp = async (userInfo) => {
 };
 
 //로그인
-const userLogin = async (res, loginInfo) => {
+const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
   const user = await User.findOne({email});
