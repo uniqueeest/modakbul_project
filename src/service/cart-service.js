@@ -65,7 +65,7 @@ const cancelCart = async (cartDelete)=> {
 
 
 //장바구니 목록 전체 삭제
-const cancelCartAll = async (cartDelAll)=> {
+const cancelCartAll = async ()=> {
 
     //모든 Cart 목록을 삭제합니다.
     const deleteCartAll = await Cart.deleteMany({});
