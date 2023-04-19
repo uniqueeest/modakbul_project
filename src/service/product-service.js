@@ -42,6 +42,16 @@ const addProduct = async(productInfo) => {
     }
 }
 
+const findAll = async () => {
+    try {
+        // 모든 상품정보 조회
+        const products = await Product.find({});
 
+        return products;
+    }
+    catch (err) {
+        throw new Error(`상품 조회에 실패했습니다. ${err.message}`);
+    }
+};
 
-module.exports = {addProduct};
+module.exports = {addProduct, findAll};
