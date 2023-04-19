@@ -26,12 +26,12 @@ userRouter.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24* 60 * 60 * 1000,
       secure: true,
     });
     res.status(200).json({
       loginSuccess: true,
-      Token: token, //undefined 해결을 어떻게 해야하지?
+      Token: token,
     });
   } catch(err) {
     console.log(err);
@@ -58,23 +58,38 @@ userRouter.get("/user", async (req, res, next) => {
 });
 
 //유저 정보 수정
-userRouter.patch("/:id", async(req, res, next) => {
+userRouter.put("/:email", async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const updateData = req.body;
-    await UserService.setUser(id, updateData);
+    const { email } = req.params;
+    const { password, phoneNumber, address } = req.body;
 
-    res.status(200).json("유저 정보가 수정되었습니다.");
-  } catch(err) {
-    next(err);
+    // password, phoneNumber, address 중 값이 하나라도 들어왔는지 확인
+    if (!password && !phoneNumber && !address) {
+      return res.status(400).json({
+        message: "변경할 정보가 입력되지 않았습니다.",
+      });
+    }
+
+    // 새 정보와 함께 updateUser 함수 호출
+    await UserService.updateUser(email, req.body.currentPassword, {
+      password,
+      phoneNumber,
+      address,
+    });
+
+    return res.status(200).json({
+      message: "사용자 정보가 수정되었습니다.",
+    });
+  } catch (error) {
+    next(error);
   }
-})
+});
 
 //유저 데이터 삭제
-userRouter.delete("/:id", async(req, res, next) => {
+userRouter.delete("/:email", async(req, res, next) => {
   try{
-    const {id} = req.params;
-    await UserService.deleteUser(id);
+    const {email} = req.params;
+    await UserService.deleteUser(email);
 
     res.status(200).send("회원탈퇴가 완료되었습니다!");
   } catch(err) {

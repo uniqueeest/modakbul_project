@@ -14,7 +14,6 @@ const UserSchema = new Schema ({
   password: {
     type: String,
     required: true,
-    select: false, // 유저 정보를 반환할 때 비밀번호는 가져오지 않기 위함
   },
   phoneNumber: {
     type: String,
@@ -33,6 +32,6 @@ const UserSchema = new Schema ({
     default: [],
     required: false,
   }
-}, {timestamps: true})
+})
 
 module.exports = UserSchema;

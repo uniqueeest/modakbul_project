@@ -43,7 +43,9 @@ const userSignUp = async (userInfo) => {
 const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const user = await User.findOne({email});
+  const user = await User.findOne({email: email}).exec();
+  console.log(user);
+
 
   //이메일 일치 여부
   if (!user) {
@@ -51,6 +53,7 @@ const userLogin = async (loginInfo) => {
   }
 
   const userPassword = await bcrypt.compare(password, user.password);
+  
 
   //비밀번호 일치 여부
   if (!userPassword) {
@@ -59,11 +62,11 @@ const userLogin = async (loginInfo) => {
 
   //로그인 성공 후 토큰 생성
   const token = jwt.sign({
+    id: user._id,
     email: user.email,
-    password: user.password,
   }, 
   "jwt-secret",
-  {expiresIn: "1h"} );
+  {expiresIn: "1d"} );
 
   return token;
 };
@@ -85,35 +88,48 @@ const checkUserData = async (userEmail) => {
   return user;
 }
 
-//유저 정보 수정
-const setUser = async (userId, updateData) => {
+//유저 정보 수정 
+const updateUser = async (email, currentPassword, newInfo) => {
   try {
-    const newData = {};
-    if (updateData.phoneNumber) {
-      newData.phoneNumber = updateData.phoneNumber;
-    }
-    if (updateData.address) {
-      newData.address = updateData.address;
-    }
-    if (updateData.password) {
-      const hashedPassword = await bcrypt.hash(updateData.password, 10)
-      newData.password = hashedPassword;
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("가입 내역이 없습니다.");
+
+    // 현재 비밀번호 확인
+    const isCorrectPassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isCorrectPassword) {
+      throw new Error("비밀번호가 일치하지 않습니다.");
     }
 
-    await User.findByIdAndUpdate({_id: userId}, newData);
-    
-  } catch(err) {
-    throw err;
-  } 
-}
+    // 새로운 유저 정보 추가
+    const updateData = {};
+    if (newInfo.password) {
+      const hashedPassword = await bcrypt.hash(newInfo.password, 10);
+      updateData.password = hashedPassword;
+    }
+    if (newInfo.phoneNumber) {
+      updateData.phoneNumber = newInfo.phoneNumber;
+    }
+    if (newInfo.address) {
+      updateData.address = newInfo.address;
+    }
+
+    // 유저 정보 업데이트
+    await User.updateOne({ email }, updateData);
+  } catch (error) {
+    throw error;
+  }
+};
 
 //유저 데이터 삭제
-const deleteUser = async (userId) => {
+const deleteUser = async (email) => {
   try {
-    await User.deleteOne({_id: userId});
+    await User.deleteOne({email: email});
   } catch(err) {
     throw err;
   }
 }
 
-module.exports = {userSignUp, userLogin, checkUserData, setUser, deleteUser};
+module.exports = {userSignUp, userLogin, checkUserData, updateUser, deleteUser};
