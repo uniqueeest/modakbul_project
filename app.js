@@ -2,7 +2,7 @@ const express = require("express");
 const config = require("./src/config");
 const cors = require("cors");
 
-const cartRouter = require('./src/routes/cart');
+const cartRouter = require('./src/routes/cart-router');
 const productRouter = require("./src/routes/product-router");
 const userRouter = require("./src/routes/user-router");
 

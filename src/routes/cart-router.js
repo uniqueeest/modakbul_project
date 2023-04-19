@@ -17,12 +17,11 @@ cartRouter.post('/new', async (req, res)=> {
 
 
 //장바구니 조회 라우터
-cartRouter.get('/get', async (req, res)=> {
-    const cartView = req.body;
+cartRouter.get('/view', async (req, res)=> {
 
     try {
-        await CartService.defaultCart(cartView);
-        res.status(200).send('장바구니 연결에 성공하였습니다');
+        const cartItems = await CartService.presentCart();
+        res.status(200).send(cartItems);
     } catch (err) {
         console.log(err);
         res.status(500).send(`${err}`);
@@ -42,6 +41,7 @@ cartRouter.delete('/delete', async (req, res)=> {
         res.status(500).send(`${err}`);
     }
 });
+
 
 //장바구니 전체 삭제 라우터
 cartRouter.delete('/delAll', async (req, res)=> {
