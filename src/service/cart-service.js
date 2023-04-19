@@ -56,7 +56,7 @@ const cancelCart = async (cartDelete)=> {
     //지울 목록의 이름을 CartSchema에서 가져옵니다.
     const { _id } = cartDelete;
     //선택한 Cart 목록을 삭제합니다.
-    const deleteCart = await Cart.deleteOne({ _id: ObjectId(_id) });
+    const deleteCart = await Cart.deleteOne({ _id: Object(_id) });
 
     if(!deleteCart) {
         throw new Error ('지울 항목이 없거나 상품이 없습니다.');
