@@ -1,4 +1,5 @@
 const { Product } = require("../db/models/product-model");
+const axios = require('axios')
 
 // 상품 추가
 const addProduct = async(productInfo) => {
@@ -42,9 +43,10 @@ const addProduct = async(productInfo) => {
     }
 }
 
+// 모든 상품 정보 조회
 const findAll = async () => {
     try {
-        // 모든 상품정보 조회
+        
         const products = await Product.find({});
 
         return products;
@@ -54,4 +56,27 @@ const findAll = async () => {
     }
 };
 
-module.exports = {addProduct, findAll};
+// 특정 상품 조회
+const findProductByName = async (name) => {
+    try {
+        
+        const product = await Product.findOne({name: name});
+
+        return product;
+    } catch (err) {
+        throw new Error(`상품 조회 실패: ${err.message}`);
+    }
+};
+
+// 특정 상품정보 수정
+const updateProduct = async (productId, productInfo) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(productId, productInfo, {new: true});
+
+        return updatedProduct;
+    } catch (err) {
+        throw new Error(`상품 수정 실패: ${err.message}`);
+    }
+}
+
+module.exports = {addProduct, findAll, updateProduct, findProductByName};
