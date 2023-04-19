@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-// 순서대로 id(shortId), 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
+// 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
 
 const ProductSchema = new Schema ({
 
