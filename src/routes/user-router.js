@@ -3,7 +3,7 @@ const UserService = require("../service/user-service");
 const userRouter = Router();
 
 //회원가입 라우터
-userRouter.post("/api/sign-up", async (req, res) => {
+userRouter.post("/sign-up", async (req, res) => {
   const userInfo = req.body;
   
   try {
@@ -13,6 +13,21 @@ userRouter.post("/api/sign-up", async (req, res) => {
     console.log(err);
     res.status(500).send(`${err}`);
   }
-})
+});
+
+//로그인 라우터
+userRouter.post("/login", async (req, res) => {
+  const loginInfo = req.body;
+
+  try {
+    const token = await UserService.userLogin(loginInfo);
+    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음.
+    res.cookie("token", token);
+    res.status(200).json({loginSuccess: true});
+  } catch(err) {
+    console.log(err);
+    res.status(400).send(`${err}`);
+  }
+});
 
 module.exports = userRouter;

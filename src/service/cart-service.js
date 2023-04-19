@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-const { Cart } = require('./db/models/cart-model');
 const { Product } = require('./db/models/product-model');
 
 //장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
