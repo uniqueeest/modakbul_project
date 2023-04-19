@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const ProductService = require('../service/product-service');
 const productRouter = Router();
+const { Product } = require("../db/models/product-model");
 
 productRouter.post('/api/products', async (req, res) => {
     const productInfo = req.body;
@@ -14,5 +15,6 @@ productRouter.post('/api/products', async (req, res) => {
         res.status(400).send(`${err}`);
     }
 });
+
 module.exports = productRouter;
 

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Product } = require("../db/models/user-model");
+const { Product } = require("../db/models/product-model");
 
 // 상품 추가
 const addProduct = async(productInfo) => {
