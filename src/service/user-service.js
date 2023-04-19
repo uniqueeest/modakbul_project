@@ -38,11 +38,11 @@ const userSignUp = async (userInfo) => {
 };
 
 //로그인
-const userLogin = async (res, loginInfo) => {
+const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
   const user = await User.findOne({email});
-  
+
   //이메일 일치 여부
   if (!user) {
     throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
@@ -60,5 +60,10 @@ const userLogin = async (res, loginInfo) => {
 
   return token;
 };
+
+//로그아웃
+const userLogout = async () => {
+  
+}
 
 module.exports = {userSignUp, userLogin};
