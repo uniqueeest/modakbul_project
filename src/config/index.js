@@ -15,4 +15,6 @@ module.exports = {
   port: parseInt(process.env.PORT ?? "3080", 10), // 어플리케이션이 바인딩되는 포트
 
   mongoDBUri: process.env.MONGODB_URI, // mongoDB 연결 주소
+
+  secret: process.env.ACCESS_TOKEN_SECRET, //jwt token
 };

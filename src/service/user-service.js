@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const {User} = require("../db/models/user-model");
-const getToken = require("../utils/jwt");
+const jwt = require("jsonwebtoken");
+
+
 
 //회원가입 
 const userSignUp = async (userInfo) => {
@@ -56,14 +58,62 @@ const userLogin = async (loginInfo) => {
   }
 
   //로그인 성공 후 토큰 생성
-  const token = getToken({userId: user._id});
+  const token = jwt.sign({
+    email: user.email,
+    password: user.password,
+  }, 
+  "jwt-secret",
+  {expiresIn: "1h"} );
 
   return token;
 };
 
 //로그아웃
 const userLogout = async () => {
-  
+  return; // 아직 미 구현
 }
 
-module.exports = {userSignUp, userLogin};
+//유저 정보 확인
+const checkUserData = async (userEmail) => {
+  const user = await User.findOne({Email: userEmail});
+
+  //유저가 존재하지 않을 경우
+  if (!user) {
+    throw new Error("가입 내역이 없습니다.");
+  }
+
+  return user;
+}
+
+//유저 정보 수정
+const setUser = async (userId, updateData) => {
+  try {
+    const newData = {};
+    if (updateData.phoneNumber) {
+      newData.phoneNumber = updateData.phoneNumber;
+    }
+    if (updateData.address) {
+      newData.address = updateData.address;
+    }
+    if (updateData.password) {
+      const hashedPassword = await bcrypt.hash(updateData.password, 10)
+      newData.password = hashedPassword;
+    }
+
+    await User.findByIdAndUpdate({_id: userId}, newData);
+    
+  } catch(err) {
+    throw err;
+  } 
+}
+
+//유저 데이터 삭제
+const deleteUser = async (userId) => {
+  try {
+    await User.deleteOne({_id: userId});
+  } catch(err) {
+    throw err;
+  }
+}
+
+module.exports = {userSignUp, userLogin, checkUserData, setUser, deleteUser};
