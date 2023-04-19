@@ -3,7 +3,7 @@ const ProductService = require('../service/product-service');
 const productRouter = Router();
 const { Product } = require("../db/models/product-model");
 
-
+// 상품 등록
 productRouter.post('/add', async (req, res) => {
     const productInfo = req.body;
 
@@ -40,8 +40,9 @@ productRouter.get('/:name', async(req, res) => {
 
     try {
         const product = await ProductService.findProductByName(name);
+
         res.status(200).json({
-            message: `상품 조회 성공!`,
+            message: `특정 상품 조회 성공!`,
             product: product
         });
     } catch (err) {

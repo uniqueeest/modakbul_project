@@ -62,6 +62,10 @@ const findProductByName = async (name) => {
         
         const product = await Product.findOne({name: name});
 
+        if(!product) {
+            throw new Error(`존재하지 않는 상품입니다.`);
+        }
+
         return product;
     } catch (err) {
         throw new Error(`상품 조회 실패: ${err.message}`);
