@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const ProductService = require('../service/product-service');
 const productRouter = Router();
-const { Product } = require("../db/models/product-model");
+
 
 // 상품 등록
 productRouter.post('/add', async (req, res) => {
@@ -74,6 +74,23 @@ productRouter.patch('/:productId', async (req, res) => {
     }
   });
 
-  //특정 제품 삭제
+  //특정 상품 삭제
+  productRouter.delete('/:name', async (req, res) => {
+    const name = req.params.name;
+    const encodedName = Buffer.from(name,'utf-8');
+
+    try {
+        const product = await ProductService.deleteProduct(encodedName);
+
+        res.status(200).json({
+            message: `특정 상품 ${name} 삭제 성공!`,
+            product: product
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({message: `서버 에러`});
+    } 
+  });
+
 module.exports = productRouter;
 
