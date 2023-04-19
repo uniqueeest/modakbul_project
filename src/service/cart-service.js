@@ -1,5 +1,6 @@
 const { Cart } = require('../db/models/cart-model');
-const { ObjectId } = require('mongoose');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 //장바구니 추가 
 const postCart = async (cartAdd)=> {
@@ -56,9 +57,9 @@ const cancelCart = async (cartDelete)=> {
     //지울 목록의 이름을 CartSchema에서 가져옵니다.
     const { _id } = cartDelete;
     //선택한 Cart 목록을 삭제합니다.
-    const deleteCart = await Cart.deleteOne({ _id: Object(_id) });
+    const deleteCart = await Cart.deleteOne({ _id });
 
-    if(!deleteCart) {
+    if(deleteCart.deletedCount === 0) {
         throw new Error ('지울 항목이 없거나 상품이 없습니다.');
     }
 };

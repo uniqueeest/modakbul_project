@@ -30,8 +30,8 @@ cartRouter.get('/view', async (req, res)=> {
 
 
 //장바구니 삭제 라우터
-cartRouter.delete('/delete', async (req, res)=> {
-    const cartDelete = req.body;
+cartRouter.delete('/delete/:_id', async (req, res)=> {
+    const cartDelete = req.params;
 
     try {
         await CartService.cancelCart(cartDelete);
@@ -44,7 +44,7 @@ cartRouter.delete('/delete', async (req, res)=> {
 
 
 //장바구니 전체 삭제 라우터
-cartRouter.delete('/delAll', async (req, res)=> {
+cartRouter.delete('/delete', async (req, res)=> {
 
     try {
         await CartService.cancelCartAll();
