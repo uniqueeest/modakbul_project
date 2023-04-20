@@ -17,7 +17,7 @@ mongoose.connect(config.mongoDBUri);
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true })); //headers 값을 읽으려면 true로 
 
 // cors 방지
 app.use(cors()); 
