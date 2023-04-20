@@ -1,47 +1,84 @@
 const { Product } = require("../db/models/product-model");
-const axios = require('axios')
+
+const multer = require('multer');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
+// 이미지 업로드를 위한 multer 미들웨어 생성
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const filename = uuidv4() + ext;
+    cb(null, filename);
+  },
+});
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (
+      file.mimetype !== 'image/png' &&
+      file.mimetype !== 'image/jpg' &&
+      file.mimetype !== 'image/jpeg'
+    ) {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  },
+});
 
 // 상품 추가
-const addProduct = async(productInfo) => {
-    try {
-        // productInfo로 가져온 정보들을 구조 분해 할당
-        const {
-            name,
-            price,
-            category,
-            description,
-            summary,
-            company,
-            stock
-        } = productInfo;
+const addProduct = async (productInfo) => {
+  try {
+    // productInfo로 가져온 정보들을 구조 분해 할당
+    const {
+      name,
+      price,
+      category,
+      description,
+      summary,
+      company,
+      stock,
+    } = productInfo;
 
-        // 상품 이름 중복 체크
-        const nameDuplicate = await Product.findOne({name});
+    // 상품 이름 중복 체크
+    const nameDuplicate = await Product.findOne({ name });
 
-        if(nameDuplicate) {
-            throw new Error("이미 등록된 상품입니다.");
-        }
-
-        // 제품 생성
-        const newProduct = new Product ({
-            name,
-            price,
-            category,
-            description,
-            summary,
-            company,
-            stock
-        });
-
-        // 상품 정보 저장
-        const savedProduct = newProduct.save();
-
-        return savedProduct;
-
-    } catch(err) {
-        throw new Error(`상품 등록에 실패했습니다. ${err}`);
+    if (nameDuplicate) {
+      throw new Error('이미 등록된 상품입니다.');
     }
-}
+
+    // 이미지 파일을 업로드합니다.
+    await upload.single('image')(productInfo.req, productInfo.res);
+
+    // 이미지 파일의 경로를 생성합니다.
+    const imagePath = path.join(
+      'public/images',
+      productInfo.req.file.filename
+    );
+
+    // 제품 생성
+    const newProduct = new Product({
+      name,
+      price,
+      category,
+      description,
+      summary,
+      company,
+      stock,
+      img: imagePath,
+    });
+
+    // 상품 정보 저장
+    const savedProduct = await newProduct.save();
+
+    return savedProduct;
+  } catch (err) {
+    throw new Error(`상품 등록에 실패했습니다. ${err}`);
+  }
+};
 
 // 모든 상품 정보 조회
 const findAll = async () => {

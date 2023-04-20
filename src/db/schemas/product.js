@@ -39,6 +39,11 @@ const ProductSchema = new Schema ({
   stock: {
     type: Number,
     required: true,
+  },
+  //이미지
+  img: {
+    type: String,  // 이미지 파일의 경로를 저장
+    required: true,
   }
 });
 

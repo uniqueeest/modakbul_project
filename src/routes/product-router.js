@@ -5,10 +5,18 @@ const productRouter = Router();
 
 // 상품 등록
 productRouter.post('/add', async (req, res) => {
-    const productInfo = req.body;
-
     try {
-        const product = await ProductService.addProduct(productInfo);
+        const product = await ProductService.addProduct({
+            name: req.body.name,
+            price: req.body.price,
+            category: req.body.category,
+            description: req.body.description,
+            summary: req.body.summary,
+            company: req.body.company,
+            stock: req.body.stock,
+            req: req,
+            res: res,
+        });
         res.status(200).json({
             message: '상품 추가 성공!',
             products: product
