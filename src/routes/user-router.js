@@ -40,9 +40,9 @@ userRouter.post("/login", async (req, res) => {
 });
 
 // 유저 정보 확인
-userRouter.get("/user", authMiddleware, async (req, res, next) => {
+userRouter.get("/:email", authMiddleware, async (req, res, next) => {
   try {
-    const {email} = req.body;
+    const {email} = req.params;
     const userInfo = await UserService.checkUserData(email);
 
     //현재는 유저 정보에서 패스워드를 제외한 전체 정보가 보임
