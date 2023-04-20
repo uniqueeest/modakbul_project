@@ -6,6 +6,7 @@ const productRouter = Router();
 // 상품 등록
 productRouter.post('/add', async (req, res) => {
     try {
+        console.log(req);
         const product = await ProductService.addProduct({
             name: req.body.name,
             price: req.body.price,
