@@ -1,4 +1,5 @@
-const {Schema} = require("mongoose");
+const mongoost = require('mongoose');
+const { Schema } = mongoose;
 
 //유저정보
 const UserSchema = new Schema ({
@@ -28,8 +29,7 @@ const UserSchema = new Schema ({
     required: false,
   },
   cart: {
-    type: [String],
-    default: [],
+    type: mongoose.Types.ObjectId,
     required: false,
   }
 })

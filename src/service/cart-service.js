@@ -1,18 +1,13 @@
 const { Cart } = require('../db/models/cart-model');
+const { User } = require('../db/models/user-model');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 //장바구니 추가 
-const postCart = async (cartAdd)=> {
+const postCart = async (userId, cartAdd)=> {
     try {
         //추가하려는 물품의 이름, 가격, 회사, 구매수량을 추가합니다.
         const { name, price, company, quantity } = cartAdd;
-        //이미 등록된 상품인지 확인합니다.
-        const productDuplicate = await Cart.findOne({ name });
-
-        if(productDuplicate !== null) {
-            throw new Error('이미 등록된 상품입니다.');
-        }
 
         //장바구니에 추가
         const newCart = new Cart ({
@@ -20,60 +15,97 @@ const postCart = async (cartAdd)=> {
             price,
             company,
             quantity,
+            poster: userId
         });
-
+        //중복 추가 방지
+        const checkCart = await Cart.findOne({name, price, company, poster: userId });
+        if(checkCart === newCart){
+            throw new Error ('이미 장바구니에 추가된 상품입니다.');
+        }
         //장바구니에 저장
-        const saveCart = newCart.save();
+        const saveCart = await newCart.save();
+        
+        //장바구니 document의 ObjectId를 User Schema의 cart 필드에 추가
+        const InsertCart = await User.findByIdAndUpdate(
+            userId,
+            { $push: { cart: saveCart._id } },
+            { new: true }
+        );
 
-        return saveCart;
+        return InsertCart.cart;
     } catch (err) {
         throw new Error('장바구니를 확인해 주세요.');
     }
 };
 
 //장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
-const presentCart = async ()=> {
+const presentCart = async (userId)=> {
+    try {
+        //해당 유저의 모든 장바구니 물품들의 내역을 표시합니다.
+        const cartItems = await User.findById(userId).populate('cart', [ 'name', 'price', 'company', 'quantity']);
+        //장바구니에 상품이 없다면 오류를 뱉어냅니다.
+        if (cartItems.cart.length === 0){
+            throw new Error ('현재 장바구니에 상품이 없습니다.');
+        }
 
-    //모든 상품의 이름, 가격, 회사, 구매 수량을 표시합니다.
-    const cartItem = await Cart.find({});
-
-    if(!cartItem) {
-        throw new Error ('현재 장바구니에 상품이 없습니다.');
-    }
-
-    const cartItemData = cartItem.map(item => ({
-        name: item.name,
-        price: item.price,
-        company: item.company,
-        quantity: item.quantity
-    }));
-
-    return cartItemData;
+        //장바구니에 담긴 상품들을 나열합니다.
+        const arrangeCart = cartItems.cart;
+        const cartItemData = arrangeCart.map((item)=> ({
+            name: item.name,
+            price: item.price,
+            company: item.company,
+            quantity: item.quantity,
+        }));
+        return cartItemData;
+    } catch (err) {
+        throw new Error ('장바구니를 확인해 주세요.')
+    };
 };
 
 
 //장바구니 목록 삭제
-const cancelCart = async (cartDelete)=> {
-    //지울 목록의 이름을 CartSchema에서 가져옵니다.
-    const { _id } = cartDelete;
-    //선택한 Cart 목록을 삭제합니다.
-    const deleteCart = await Cart.deleteOne({ _id });
+const removeCart = async (userId, cartDelete)=> {
+    try {
+        //해당 유저의 물품들의 내역을 표시합니다.
+        const usersCart = await User.findById(userId).populate('cart');
+        //장바구니에 상품이 없다면 오류를 뱉어냅니다.
+        if (usersCart.cart.length === 0){
+            throw new Error ('현재 장바구니에 상품이 없습니다.');
+        }
+        //장바구니에서 삭제할 상품을 찾습니다.
+        const cartItem = usersCart.cart.find(item => item._id.toString() === cartDelete);
 
-    if(deleteCart.deletedCount === 0) {
-        throw new Error ('지울 항목이 없거나 상품이 없습니다.');
+        //장바구니에서 해당 상품을 삭제합니다.
+        await User.findByIdAndUpdate(userId, { $pull: { cart: cartItem._id } });
+
+        //참조되고 있던 cart document도 같이 삭제합니다.
+        await Cart.findByIdAndDelete(cartDelete);
+
+        return;
+    } catch (err) {
+        throw new Error ('장바구니를 확인해 주세요.');
     }
 };
 
 
 //장바구니 목록 전체 삭제
-const cancelCartAll = async ()=> {
-
-    //모든 Cart 목록을 삭제합니다.
-    const deleteCartAll = await Cart.deleteMany({});
-
-    if(!deleteCartAll) {
-        throw new Error ('지울 항목이 없거나 상품이 없습니다.');
+const removeAllCart = async (userId)=> {
+    try {
+        //해당 유저의 물품들의 내역을 표시합니다.
+        const usersCart = await User.findById(userId).populate('cart');
+        //장바구니에 상품이 없다면 오류를 뱉어냅니다.
+        if (usersCart.cart.length === 0){
+            throw new Error ('현재 장바구니에 상품이 없습니다.');
+        }
+        //장바구니에서 모든 상품을 삭제합니다.
+        await User.findByIdAndUpdate(userId, { $unset: { cart: "" } });
+        //참조되고 있던 cart document도 전부 삭제합니다.
+        const cartIds = usersCart.cart.map((item)=> item._id);
+        await Cart.deleteMany({ _id: { $in: cartIds } });
+        return;
+    } catch (err) {
+        throw new Error ('장바구니를 확인해 주세요.');
     }
 };
 
-module.exports = { postCart, presentCart, cancelCart, cancelCartAll };
+module.exports = { postCart, presentCart, removeCart, removeAllCart };
