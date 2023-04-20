@@ -39,11 +39,8 @@ userRouter.post("/login", async (req, res) => {
   }
 });
 
-// 토큰이 정상으로 작동되는지 확인
-userRouter.get("/auth", authMiddleware);
-
 // 유저 정보 확인
-userRouter.get("/user", async (req, res, next) => {
+userRouter.get("/user", authMiddleware, async (req, res, next) => {
   try {
     const {email} = req.body;
     const userInfo = await UserService.checkUserData(email);
@@ -58,7 +55,7 @@ userRouter.get("/user", async (req, res, next) => {
 });
 
 //유저 정보 수정 (이거는 덮어씌우는 것이기 때문에 put 사용)
-userRouter.put("/:email", async (req, res, next) => {
+userRouter.put("/:email", authMiddleware, async (req, res, next) => {
   try {
     const { email } = req.params;
     const { password, phoneNumber, address } = req.body;
@@ -86,7 +83,7 @@ userRouter.put("/:email", async (req, res, next) => {
 });
 
 //유저 데이터 삭제
-userRouter.delete("/:email", async(req, res, next) => {
+userRouter.delete("/:email", authMiddleware, async(req, res, next) => {
   try{
     const {email} = req.params;
     await UserService.deleteUser(email);
