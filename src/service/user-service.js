@@ -35,7 +35,7 @@ const userSignUp = async (userInfo) => {
     return savedUser;
     
   } catch(err) {
-    throw new Error(`회원가입에 실패했습니다. ${err}`);
+    throw new Error(err);
   }
 };
 
@@ -43,8 +43,7 @@ const userSignUp = async (userInfo) => {
 const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const user = await User.findOne({email: email}).exec();
-  console.log(user);
+  const user = await User.findOne({email: email});
 
 
   //이메일 일치 여부
@@ -118,8 +117,8 @@ const updateUser = async (email, currentPassword, newInfo) => {
 
     // 유저 정보 업데이트
     await User.updateOne({ email }, updateData);
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 

@@ -57,7 +57,7 @@ userRouter.get("/user", async (req, res, next) => {
 
 });
 
-//유저 정보 수정
+//유저 정보 수정 (이거는 덮어씌우는 것이기 때문에 put 사용)
 userRouter.put("/:email", async (req, res, next) => {
   try {
     const { email } = req.params;

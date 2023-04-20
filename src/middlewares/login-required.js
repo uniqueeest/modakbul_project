@@ -43,4 +43,5 @@ const authMiddleware = (req, res, next) => {
   validToken.then(respond).catch(onError);
 }
 
+
 module.exports = authMiddleware;
