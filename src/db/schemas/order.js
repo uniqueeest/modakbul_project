@@ -22,7 +22,7 @@ const OrderSchema = new Schema({
         required: true,
         default: "상품 준비중"
     },
-    cart: [String],
+    cart: [],
     total: {
         type: Number,
         required: true,
