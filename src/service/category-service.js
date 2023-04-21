@@ -26,4 +26,15 @@ const addCategory = async (categoryInfo) => {
     }
 };
 
-module.exports = { addCategory };
+// 모든 카테고리 조회
+const findAll = async () => {
+    try {
+        const categories = await Category.find({});
+
+        return categories;
+    } catch (err) {
+        throw new Error(`카테고리 조회에 실패했습니다. ${err.message}`);
+    }
+}
+ 
+module.exports = { addCategory, findAll };

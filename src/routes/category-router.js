@@ -18,4 +18,17 @@ categoryRouter.post('/add', async (req, res) => {
     }  
 });
 
+categoryRouter.get('/', async (req, res) => {
+    try {
+        const categories = await CategoryService.findAll();
+        res.status(200).json({
+            message: `모든 카테고리 조회 성공!`,
+            categories: categories
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).send(`${err}`);
+    }
+});
+
 module.exports = categoryRouter;
