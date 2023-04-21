@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const CartService = require('../service/cart-service');
 const cartRouter = Router();
+const cartJwt = require('../middlewares/cart-required');
 
 //장바구니 추가 라우터
-cartRouter.post('/new', async (req, res)=> {
+cartRouter.post('/new', cartJwt, async (req, res)=> {
     const userId = req.user.id;
     const cartAdd =req.body;
 
@@ -18,7 +19,7 @@ cartRouter.post('/new', async (req, res)=> {
 
 
 //장바구니 조회 라우터
-cartRouter.get('/view', async (req, res)=> {
+cartRouter.get('/view', cartJwt, async (req, res)=> {
     const userId = req.user.id;
 
     try {
@@ -32,7 +33,7 @@ cartRouter.get('/view', async (req, res)=> {
 
 
 //장바구니 삭제 라우터
-cartRouter.delete('/delete/:_id', async (req, res)=> {
+cartRouter.delete('/delete/:_id', cartJwt, async (req, res)=> {
     const userId = req.user.id;
     const cartDelete = req.params;
 
@@ -47,7 +48,7 @@ cartRouter.delete('/delete/:_id', async (req, res)=> {
 
 
 //장바구니 전체 삭제 라우터
-cartRouter.delete('/delete', async (req, res)=> {
+cartRouter.delete('/delete', cartJwt, async (req, res)=> {
     const userId = req.user.id;
 
     try {

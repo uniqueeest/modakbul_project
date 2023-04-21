@@ -28,10 +28,10 @@ const UserSchema = new Schema ({
     type: String,
     required: false,
   },
-  cart: {
+  cart: [{
     type: mongoose.Types.ObjectId,
-    required: false,
-  }
+    ref: 'Cart',
+  }]
 })
 
 module.exports = UserSchema;
