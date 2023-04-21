@@ -2,18 +2,16 @@ const { Schema } = require('mongoose');
 
 //회의에서 진행된 order_schema 입니다.
 const OrderSchema = new Schema({
-    email: {
-        type: String,
+    customerId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    fullName: {
-        type: String,
-        required: true,
-    },
-    phoneNumber: {
+    customerPhoneNumber: {
         type: String,
         required: true,
     },
-    address: {
+    customerAddress: {
         type: String,
         required: true,
     },
@@ -27,6 +25,13 @@ const OrderSchema = new Schema({
         type: Number,
         required: true,
     },
+    orderNumber: {
+      type: String,
+      required: true,
+    }
+},{
+  collection: "orders",
+  timestamps: true,
 })
 
 module.exports = OrderSchema;

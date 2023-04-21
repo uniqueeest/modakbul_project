@@ -1,20 +1,22 @@
 const {Router} = require("express");
 const OrderService = require("../service/order-service");
 const orderRouter = Router();
+const authMiddleware = require("../middlewares/login-required");
 
 //주문 정보 조회 라우터
-orderRouter.get("/:userId", async(req, res, next) => {
+orderRouter.get("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
-    const orderInfo = OrderService.findOrder(userId);
+    const orderInfo = await OrderService.findOrder(userId);
+    console.log(orderInfo);
 
-    res.status(200).json({orderInfo});
+    res.status(200).send(orderInfo);
   } catch(err){
     next(err);
   }
 });
 
-orderRouter.post("/", async(req, res, next) => {
+orderRouter.post("/", authMiddleware, async(req, res, next) => {
   try {
     const orderInfo = req.body;
     await OrderService.addOrder(orderInfo);
@@ -25,7 +27,7 @@ orderRouter.post("/", async(req, res, next) => {
   }
 });
 
-orderRouter.patch("/:userId", async(req, res, next) => {
+orderRouter.patch("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
     const orderInfo = req.body;
@@ -41,7 +43,7 @@ orderRouter.patch("/:userId", async(req, res, next) => {
   }
 });
 
-orderRouter.delete("/:userId", async(req, res, next) => {
+orderRouter.delete("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
     await OrderService.deletedOrder(userId);

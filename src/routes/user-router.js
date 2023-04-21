@@ -26,7 +26,7 @@ userRouter.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
-      maxAge: 24* 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000,
       secure: true,
     });
     res.status(200).json({
@@ -43,10 +43,8 @@ userRouter.post("/login", async (req, res) => {
 userRouter.get("/:userId", authMiddleware, async (req, res, next) => {
   try {
     const {userId} = req.params;
-    console.log(userId);
-    const userInfo = await userService.checkUserData(userId);
 
-    //현재는 유저 정보에서 패스워드를 제외한 전체 정보가 보임
+    const userInfo = await userService.checkUserData(userId);
 
     res.status(200).json(userInfo);
   } catch(err) {

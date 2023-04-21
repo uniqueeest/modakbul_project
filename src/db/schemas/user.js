@@ -32,6 +32,9 @@ const UserSchema = new Schema ({
     default: [],
     required: false,
   }
+}, {
+  collection: "users",
+  timestamps: true,
 })
 
 module.exports = UserSchema;
