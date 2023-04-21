@@ -2,9 +2,49 @@ const { Router } = require('express');
 const ProductService = require('../service/product-service');
 const productRouter = Router();
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
+// // 폴더가 없는지 확인 후 없으면 생성하는 코드
+// try {
+//   fs.readdirSync("upload");
+// } catch (err) {
+//   console.error("upload 폴더가 없습니다. 폴더를 생성합니다.");
+//   fs.mkdirSync("upload");
+// }
+
+// 이미지 업로드를 위한 multer 미들웨어 생성
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const filename = uuidv4() + ext;
+    cb(null, filename);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {fileSize: 20 * 1024 * 1024,},
+  fileFilter: function (req, file, cb) {
+    if (
+      file.mimetype !== 'image/png' &&
+      file.mimetype !== 'image/jpg' &&
+      file.mimetype !== 'image/jpeg'
+    ) {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  },
+});
+
 
 // 상품 등록
-productRouter.post('/add', async (req, res) => {
+productRouter.post('/add', upload.single("img"), async (req, res) => {
     try {
         console.log(req);
         const product = await ProductService.addProduct({

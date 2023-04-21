@@ -2,32 +2,10 @@ const { Product } = require("../db/models/product-model");
 
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const { randomUUID } = require('uuid');
 
-// 이미지 업로드를 위한 multer 미들웨어 생성
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/images');
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const filename = randomUUID() + ext;
-    cb(null, filename);
-  },
-});
-const upload = multer({
-  storage: storage,
-  fileFilter: function (req, file, cb) {
-    if (
-      file.mimetype !== 'image/png' &&
-      file.mimetype !== 'image/jpg' &&
-      file.mimetype !== 'image/jpeg'
-    ) {
-      return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-  },
-});
+
 
 // 상품 추가
 const addProduct = async (productInfo) => {
@@ -51,7 +29,7 @@ const addProduct = async (productInfo) => {
     }
 
     // 이미지 파일을 업로드합니다.
-    await upload.single('image')(productInfo.req, productInfo.res);
+    await upload.single('img')(productInfo.req, productInfo.res);
     
     // 이미지 파일의 경로를 생성합니다.
     const imagePath = path.join(
