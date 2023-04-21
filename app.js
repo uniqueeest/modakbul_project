@@ -5,6 +5,7 @@ const cors = require("cors");
 const productRouter = require("./src/routes/product-router");
 const userRouter = require("./src/routes/user-router");
 const orderRouter = require("./src/routes/order-router");
+// const categoryRouter = require("./src/routes/category-router");
 
 const mongoose = require("mongoose");
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+// app.use("/api/categories", categoryRouter);
 
 
 app.listen(config.port, () => {
