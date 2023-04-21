@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const UserService = require("../service/user-service");
+const userService = require("../service/user-service");
 const userRouter = Router();
 const authMiddleware = require("../middlewares/login-required");
 
@@ -8,7 +8,7 @@ userRouter.post("/sign-up", async (req, res) => {
   const userInfo = req.body;
   
   try {
-    await UserService.userSignUp(userInfo);
+    await userService.userSignUp(userInfo);
     res.status(201).send("회원가입이 완료되었습니다.");
   } catch(err) {
     console.log(err);
@@ -21,7 +21,7 @@ userRouter.post("/login", async (req, res) => {
   const loginInfo = req.body;
 
   try {
-    const token = await UserService.userLogin(loginInfo);
+    const token = await userService.userLogin(loginInfo);
     // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 하루 (24시간)
     res.cookie("token", token, {
       httpOnly: true,
@@ -40,10 +40,11 @@ userRouter.post("/login", async (req, res) => {
 });
 
 // 유저 정보 확인
-userRouter.get("/:email", authMiddleware, async (req, res, next) => {
+userRouter.get("/:userId", authMiddleware, async (req, res, next) => {
   try {
-    const {email} = req.params;
-    const userInfo = await UserService.checkUserData(email);
+    const {userId} = req.params;
+    console.log(userId);
+    const userInfo = await userService.checkUserData(userId);
 
     //현재는 유저 정보에서 패스워드를 제외한 전체 정보가 보임
 
@@ -55,9 +56,9 @@ userRouter.get("/:email", authMiddleware, async (req, res, next) => {
 });
 
 //유저 정보 수정 (이거는 덮어씌우는 것이기 때문에 put 사용)
-userRouter.put("/:email", authMiddleware, async (req, res, next) => {
+userRouter.put("/:userId", authMiddleware, async (req, res, next) => {
   try {
-    const { email } = req.params;
+    const {userId} = req.params;
     const { password, phoneNumber, address } = req.body;
 
     // password, phoneNumber, address 중 값이 하나라도 들어왔는지 확인
@@ -68,7 +69,7 @@ userRouter.put("/:email", authMiddleware, async (req, res, next) => {
     }
 
     // 새 정보와 함께 updateUser 함수 호출
-    await UserService.updateUser(email, req.body.currentPassword, {
+    await userService.updateUser(userId, req.body.currentPassword, {
       password,
       phoneNumber,
       address,
@@ -83,10 +84,10 @@ userRouter.put("/:email", authMiddleware, async (req, res, next) => {
 });
 
 //유저 데이터 삭제
-userRouter.delete("/:email", authMiddleware, async(req, res, next) => {
+userRouter.delete("/:userId", authMiddleware, async(req, res, next) => {
   try{
-    const {email} = req.params;
-    await UserService.deleteUser(email);
+    const {userId} = req.params;
+    await userService.deleteUser(userId);
 
     res.status(200).send("회원탈퇴가 완료되었습니다!");
   } catch(err) {

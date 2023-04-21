@@ -70,14 +70,9 @@ const userLogin = async (loginInfo) => {
   return token;
 };
 
-//로그아웃
-const userLogout = async () => {
-  return; // 아직 미 구현
-}
-
 //유저 정보 확인
-const checkUserData = async (userEmail) => {
-  const user = await User.findOne({Email: userEmail});
+const checkUserData = async (userId) => {
+  const user = await User.findOne({_id: userId});
 
   //유저가 존재하지 않을 경우
   if (!user) {
@@ -88,9 +83,9 @@ const checkUserData = async (userEmail) => {
 }
 
 //유저 정보 수정 
-const updateUser = async (email, currentPassword, newInfo) => {
+const updateUser = async (userId, currentPassword, newInfo) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({_id: userId});
     if (!user) throw new Error("가입 내역이 없습니다.");
 
     // 현재 비밀번호 확인
@@ -116,19 +111,28 @@ const updateUser = async (email, currentPassword, newInfo) => {
     }
 
     // 유저 정보 업데이트
-    await User.updateOne({ email }, updateData);
+    await User.updateOne({ userId }, updateData);
   } catch (err) {
     throw err;
   }
 };
 
 //유저 데이터 삭제
-const deleteUser = async (email) => {
+const deleteUser = async (userId) => {
   try {
-    await User.deleteOne({email: email});
+    await User.deleteOne({_id: userId});
   } catch(err) {
     throw err;
   }
 }
 
-module.exports = {userSignUp, userLogin, checkUserData, updateUser, deleteUser};
+const userService = {
+  userSignUp,
+  userLogin,
+  checkUserData,
+  updateUser,
+  deleteUser
+};
+
+module.exports = userService;
+

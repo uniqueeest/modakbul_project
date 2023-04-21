@@ -6,6 +6,7 @@ const cartRouter = require('./src/routes/cart-router');
 const productRouter = require("./src/routes/product-router");
 const userRouter = require("./src/routes/user-router");
 const orderRouter = require("./src/routes/order-router");
+// const categoryRouter = require("./src/routes/category-router");
 
 const mongoose = require("mongoose");
 
@@ -31,6 +32,7 @@ app.use('/api/carts', cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+// app.use("/api/categories", categoryRouter);
 
 
 app.listen(config.port, () => {
