@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-// 순서대로 id(shortId), 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
+// 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
 
 const ProductSchema = new Schema ({
 
@@ -38,6 +38,11 @@ const ProductSchema = new Schema ({
   //재고
   stock: {
     type: Number,
+    required: true,
+  },
+  //이미지
+  img: {
+    type: String,  // 이미지 파일의 경로를 저장
     required: true,
   }
 });
