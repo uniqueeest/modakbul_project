@@ -65,7 +65,7 @@ const userLogin = async (loginInfo) => {
     email: user.email,
   }, 
   "jwt-secret",
-  {expiresIn: "1d"} );
+  {expiresIn: "1h"} );
 
   return token;
 };
@@ -79,7 +79,14 @@ const checkUserData = async (userId) => {
     throw new Error("가입 내역이 없습니다.");
   }
 
-  return user;
+  const userData = {
+    email: user.email,
+    fullName: user.fullName,
+    phoneNumber: user.phoneNumber,
+    address: user.address
+  }
+
+  return userData;
 }
 
 //유저 정보 수정 
