@@ -17,10 +17,12 @@ const OrderSchema = new Schema({
         type: String,
         required: true,
     },
-    status: {
+    orderStatus: {
         type: String,
         required: true,
+        default: "상품 준비중"
     },
+    cart: [],
     total: {
         type: Number,
         required: true,

@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const {User} = require("../db/models/user-model");
-const getToken = require("../utils/jwt");
+const jwt = require("jsonwebtoken");
+
+
 
 //회원가입 
 const userSignUp = async (userInfo) => {
@@ -33,7 +35,7 @@ const userSignUp = async (userInfo) => {
     return savedUser;
     
   } catch(err) {
-    throw new Error(`회원가입에 실패했습니다. ${err}`);
+    throw new Error(err);
   }
 };
 
@@ -41,14 +43,16 @@ const userSignUp = async (userInfo) => {
 const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const user = await User.findOne({email});
-  
+  const user = await User.findOne({email: email});
+
+
   //이메일 일치 여부
   if (!user) {
     throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
   }
 
   const userPassword = await bcrypt.compare(password, user.password);
+  
 
   //비밀번호 일치 여부
   if (!userPassword) {
@@ -56,9 +60,79 @@ const userLogin = async (loginInfo) => {
   }
 
   //로그인 성공 후 토큰 생성
-  const token = getToken({userId: user._id});
+  const token = jwt.sign({
+    id: user._id,
+    email: user.email,
+  }, 
+  "jwt-secret",
+  {expiresIn: "1d"} );
 
   return token;
 };
 
-module.exports = {userSignUp, userLogin};
+//유저 정보 확인
+const checkUserData = async (userId) => {
+  const user = await User.findOne({_id: userId});
+
+  //유저가 존재하지 않을 경우
+  if (!user) {
+    throw new Error("가입 내역이 없습니다.");
+  }
+
+  return user;
+}
+
+//유저 정보 수정 
+const updateUser = async (userId, currentPassword, newInfo) => {
+  try {
+    const user = await User.findOne({_id: userId});
+    if (!user) throw new Error("가입 내역이 없습니다.");
+
+    // 현재 비밀번호 확인
+    const isCorrectPassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isCorrectPassword) {
+      throw new Error("비밀번호가 일치하지 않습니다.");
+    }
+
+    // 새로운 유저 정보 추가
+    const updateData = {};
+    if (newInfo.password) {
+      const hashedPassword = await bcrypt.hash(newInfo.password, 10);
+      updateData.password = hashedPassword;
+    }
+    if (newInfo.phoneNumber) {
+      updateData.phoneNumber = newInfo.phoneNumber;
+    }
+    if (newInfo.address) {
+      updateData.address = newInfo.address;
+    }
+
+    // 유저 정보 업데이트
+    await User.updateOne({ userId }, updateData);
+  } catch (err) {
+    throw err;
+  }
+};
+
+//유저 데이터 삭제
+const deleteUser = async (userId) => {
+  try {
+    await User.deleteOne({_id: userId});
+  } catch(err) {
+    throw err;
+  }
+}
+
+const userService = {
+  userSignUp,
+  userLogin,
+  checkUserData,
+  updateUser,
+  deleteUser
+};
+
+module.exports = userService;
+

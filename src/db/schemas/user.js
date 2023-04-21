@@ -1,4 +1,5 @@
-const {Schema} = require("mongoose");
+const mongoost = require('mongoose');
+const { Schema } = mongoose;
 
 //유저정보
 const UserSchema = new Schema ({
@@ -27,10 +28,10 @@ const UserSchema = new Schema ({
     type: String,
     required: false,
   },
-  cart: {
-    type: String,
-    required: false,
-  }
+  cart: [{
+    type: mongoose.Types.ObjectId,
+    ref: 'Cart',
+  }]
 })
 
 module.exports = UserSchema;

@@ -1,4 +1,5 @@
-const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 //장바구니 페이지에 보여질 상품에 대한 스키마 정리입니다.
 const CartSchema = new Schema({
@@ -19,6 +20,11 @@ const CartSchema = new Schema({
         type: Number,
         required: true,
     },
+    //장바구니에 담은 유저의 ObjectId를 가집니다.
+    poster: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+    }
 });
 
 module.exports = CartSchema;
