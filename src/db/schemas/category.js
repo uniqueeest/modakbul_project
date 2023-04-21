@@ -6,7 +6,7 @@ const CategorySchema = new Schema ({
     major: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     },
     minor: {
         type: [String],
