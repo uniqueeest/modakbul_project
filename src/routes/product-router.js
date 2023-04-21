@@ -28,19 +28,19 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
-  limits: {fileSize: 20 * 1024 * 1024,},
-  fileFilter: function (req, file, cb) {
-    if (
-      file.mimetype !== 'image/png' &&
-      file.mimetype !== 'image/jpg' &&
-      file.mimetype !== 'image/jpeg'
-    ) {
-      return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-  },
-});
+    storage: storage,
+    limits: {fileSize: 20 * 1024 * 1024,},
+    fileFilter: function (req, file, cb) {
+      if (
+        file.mimetype !== 'image/png' &&
+        file.mimetype !== 'image/jpg' &&
+        file.mimetype !== 'image/jpeg'
+      ) {
+        return cb(new Error('Only image files are allowed!'), false);
+      }
+      cb(null, true);
+    },
+  }); 
 
 
 // 상품 등록

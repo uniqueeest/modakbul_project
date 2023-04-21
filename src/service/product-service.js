@@ -3,9 +3,34 @@ const { Product } = require("../db/models/product-model");
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { randomUUID } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+// const upload = require('../routes/product-router');
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const filename = uuidv4() + ext;
+    cb(null, filename);
+  },
+});
 
+const upload = multer({
+    storage: storage,
+    limits: {fileSize: 20 * 1024 * 1024,},
+    fileFilter: function (req, file, cb) {
+      if (
+        file.mimetype !== 'image/png' &&
+        file.mimetype !== 'image/jpg' &&
+        file.mimetype !== 'image/jpeg'
+      ) {
+        return cb(new Error('Only image files are allowed!'), false);
+      }
+      cb(null, true);
+    },
+  }); 
 
 // 상품 추가
 const addProduct = async (productInfo) => {
@@ -117,4 +142,4 @@ const deleteProduct = async (name) => {
     }
 }
 
-module.exports = {addProduct, findAll, updateProduct, findProductByName, deleteProduct};
+module.exports = {addProduct, findAll, updateProduct, findProductByName, deleteProduct, upload};
