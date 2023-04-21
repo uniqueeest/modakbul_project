@@ -2,10 +2,11 @@ const express = require("express");
 const config = require("./src/config");
 const cors = require("cors");
 
+const cartRouter = require('./src/routes/cart-router');
 const productRouter = require("./src/routes/product-router");
 const userRouter = require("./src/routes/user-router");
+const categoryRouter = require("./src/routes/category-router");
 const orderRouter = require("./src/routes/order-router");
-// const categoryRouter = require("./src/routes/category-router");
 
 const mongoose = require("mongoose");
 
@@ -27,11 +28,10 @@ app.get("/", (req, res) => {
   res.send("root page");
 });
 
-
+app.use('/api/cagetories', categoryRouter)
+app.use('/api/carts', cartRouter);
 app.use("/api/products", productRouter);
-app.use("/api/users", userRouter);
-app.use("/api/orders", orderRouter);
-// app.use("/api/categories", categoryRouter);
+app.use("/api/users", userRouter)
 
 
 app.listen(config.port, () => {
