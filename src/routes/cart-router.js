@@ -1,10 +1,10 @@
 const { Router } = require('express');
 const CartService = require('../service/cart-service');
 const cartRouter = Router();
-const cartJwt = require('../middlewares/cart-required');
+const authMiddleware = require('../middlewares/login-required');
 
 //장바구니 추가 라우터
-cartRouter.post('/new', cartJwt, async (req, res)=> {
+cartRouter.post('/:userId/new', authMiddleware, async (req, res)=> {
     const userId = req.user.id;
     const cartAdd =req.body;
 
@@ -19,8 +19,8 @@ cartRouter.post('/new', cartJwt, async (req, res)=> {
 
 
 //장바구니 조회 라우터
-cartRouter.get('/view', cartJwt, async (req, res)=> {
-    const userId = req.user.id;
+cartRouter.get('/:userId/view', authMiddleware, async (req, res)=> {
+    const userId = req.params;
 
     try {
         const cartItems = await CartService.presentCart(userId);
@@ -33,12 +33,12 @@ cartRouter.get('/view', cartJwt, async (req, res)=> {
 
 
 //장바구니 삭제 라우터
-cartRouter.delete('/delete/:_id', cartJwt, async (req, res)=> {
-    const userId = req.user.id;
-    const cartDelete = req.params;
+cartRouter.delete('/:userId/deleteOne', authMiddleware, async (req, res)=> {
+    const userId = req.params;
+    const requestedThisInTheCart = req.body;
 
     try {
-        await CartService.removeCart(userId, cartDelete);
+        await CartService.removeCart(userId, requestedThisInTheCart);
         res.status(200).send('장바구니 삭제에 성공했습니다');
     } catch (err) {
         console.log(err);
@@ -48,8 +48,8 @@ cartRouter.delete('/delete/:_id', cartJwt, async (req, res)=> {
 
 
 //장바구니 전체 삭제 라우터
-cartRouter.delete('/delete', cartJwt, async (req, res)=> {
-    const userId = req.user.id;
+cartRouter.delete('/:userId/delete', authMiddleware, async (req, res)=> {
+    const userId = req.params;
 
     try {
         await CartService.removeAllCart(userId);

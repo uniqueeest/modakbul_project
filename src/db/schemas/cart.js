@@ -22,7 +22,7 @@ const CartSchema = new Schema({
     },
     //장바구니에 담은 유저의 ObjectId를 가집니다.
     poster: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
     }
 });

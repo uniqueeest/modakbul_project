@@ -1,10 +1,13 @@
 const { Cart } = require('../db/models/cart-model');
 const { User } = require('../db/models/user-model');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
 
 //장바구니 추가 
 const postCart = async (userId, cartAdd)=> {
+    // Jwt 키 값을 API에 구현하기 위해 파라미터 키 값을 문자열로 변환합니다.
+    const modifyId = JSON.stringify(userId)
+        .substring(11)
+        .slice(0,-2)
     try {
         //추가하려는 물품의 이름, 가격, 회사, 구매수량을 추가합니다.
         const { name, price, company, quantity } = cartAdd;
@@ -15,10 +18,10 @@ const postCart = async (userId, cartAdd)=> {
             price,
             company,
             quantity,
-            poster: userId
+            poster: modifyId
         });
         //중복 추가 방지
-        const checkCart = await Cart.findOne({name, price, company, poster: userId });
+        const checkCart = await Cart.findOne({name, price, company, poster: modifyId });
         if(checkCart){
             throw new Error ('이미 장바구니에 추가된 상품입니다.');
         }
@@ -26,13 +29,13 @@ const postCart = async (userId, cartAdd)=> {
         const saveCart = await newCart.save();
         
         //장바구니 document의 ObjectId를 User Schema의 cart 필드에 추가
-        const InsertCart = await User.findByIdAndUpdate(
-            userId,
+        const insertCart = await User.findByIdAndUpdate(
+            modifyId,
             { $push: { cart: saveCart._id } },
             { new: true }
         );
 
-        return InsertCart.cart;
+        return insertCart.cart;
     } catch (err) {
         throw new Error('장바구니를 확인해 주세요.');
     }
@@ -40,9 +43,12 @@ const postCart = async (userId, cartAdd)=> {
 
 //장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
 const presentCart = async (userId)=> {
+    const modifyId = JSON.stringify(userId)
+    .substring(11)
+    .slice(0,-2)
     try {
         //해당 유저의 모든 장바구니 물품들의 내역을 표시합니다.
-        const cartItems = await User.findById(userId).populate('cart');
+        const cartItems = await User.findById(modifyId).populate('cart');
         //장바구니에 상품이 없다면 오류를 뱉어냅니다.
         if (cartItems.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
@@ -64,23 +70,25 @@ const presentCart = async (userId)=> {
 
 
 //장바구니 목록 삭제
-const removeCart = async (userId, cartDelete)=> {
-        
+const removeCart = async (userId, requestedThisInTheCart)=> {
+    const modifyId = JSON.stringify(userId)
+    .substring(11)
+    .slice(0,-2)        
         try{
         //해당 유저의 물품들의 내역을 표시합니다.
-        const usersCart = await User.findById(userId).populate('cart');
+        const usersCart = await User.findById(modifyId).populate('cart');
         //장바구니에 상품이 없다면 오류를 뱉어냅니다.
         if (usersCart.cart.length === 0){
             throw new Error ('장바구니에 담긴 물품이 없습니다.');
         }
         //유저의 장바구니 품목을 삭제합니다.
         await User.findByIdAndUpdate(
-            userId,
-            { $pull: { cart: cartDelete } },
+            modifyId,
+            { $pull: { cart: requestedThisInTheCart } },
             { new: true }
         );
         //참조되고 있던 cart document도 같이 삭제합니다.
-        await Cart.findByIdAndDelete(cartDelete);
+        await Cart.findByIdAndDelete(requestedThisInTheCart);
     } catch (err){
         throw new Error('장바구니를 확인하세요');
     }
@@ -89,15 +97,18 @@ const removeCart = async (userId, cartDelete)=> {
 
 //장바구니 목록 전체 삭제
 const removeAllCart = async (userId)=> {
+    const modifyId = JSON.stringify(userId)
+    .substring(11)
+    .slice(0,-2)   
     try {    
         //해당 유저의 물품들의 내역을 표시합니다.
-        const usersCart = await User.findById(userId).populate('cart');
+        const usersCart = await User.findById(modifyId).populate('cart');
         //장바구니에 상품이 없다면 오류를 뱉어냅니다.
         if (usersCart.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
         }
         //장바구니에서 모든 상품을 삭제합니다.
-        await User.findByIdAndUpdate(userId, { $set: { cart: [] } });
+        await User.findByIdAndUpdate(modifyId, { $set: { cart: [] } });
         //참조되고 있던 cart document도 전부 삭제합니다.
         const cartIds = usersCart.cart.map((item)=> item._id);
         await Cart.deleteMany({ _id: { $in: cartIds } });
