@@ -31,7 +31,8 @@ app.get("/", (req, res) => {
 app.use('/api/categories', categoryRouter)
 app.use('/api/carts', cartRouter);
 app.use("/api/products", productRouter);
-app.use("/api/users", userRouter)
+app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
 
 
 app.listen(config.port, () => {
