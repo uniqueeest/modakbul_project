@@ -8,7 +8,11 @@ orderRouter.get("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
     const orderInfo = await OrderService.findOrder(userId);
-    console.log(orderInfo);
+    if (!orderInfo) {
+      res.status(400).json({
+        message: "등록할 주문이 입력되지 않았습니다."
+      });
+    }
 
     res.status(200).send(orderInfo);
   } catch(err){
@@ -16,6 +20,7 @@ orderRouter.get("/:userId", authMiddleware, async(req, res, next) => {
   }
 });
 
+//새로운 주문 추가
 orderRouter.post("/", authMiddleware, async(req, res, next) => {
   try {
     const orderInfo = req.body;
@@ -27,6 +32,7 @@ orderRouter.post("/", authMiddleware, async(req, res, next) => {
   }
 });
 
+//주문 수정
 orderRouter.patch("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
@@ -43,6 +49,7 @@ orderRouter.patch("/:userId", authMiddleware, async(req, res, next) => {
   }
 });
 
+//주문 삭제
 orderRouter.delete("/:userId", authMiddleware, async(req, res, next) => {
   try {
     const {userId} = req.params;
