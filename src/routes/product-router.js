@@ -126,10 +126,9 @@ productRouter.patch('/:productId', async (req, res) => {
   //특정 상품 삭제
   productRouter.delete('/:name', async (req, res) => {
     const name = req.params.name;
-    const encodedName = Buffer.from(name,'utf-8');
 
     try {
-        const product = await ProductService.deleteProduct(encodedName);
+        const product = await ProductService.deleteProduct(name);
 
         res.status(200).json({
             message: `특정 상품 ${name} 삭제 성공!`,

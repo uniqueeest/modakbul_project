@@ -9,7 +9,7 @@ const addCategory = async (categoryInfo) => {
         const majorDuplicate = await Category.findOne({ major });
 
         if (majorDuplicate) {
-            throw new Error('이미 등록된 상품입니다.');
+            throw new Error('이미 등록된 major 카테고리입니다.');
           }
 
         // 카테고리 생성

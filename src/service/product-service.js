@@ -100,7 +100,7 @@ const findAll = async () => {
 const findProductByName = async (name) => {
     try {
         
-        const product = await Product.findOne({name: name});
+        const product = await Product.findOne({name});
 
         if(!product) {
             throw new Error(`존재하지 않는 상품입니다.`);
