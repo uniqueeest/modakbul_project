@@ -30,7 +30,7 @@ const postCart = async (userId, cartAdd)=> {
                 throw new Error ('이미 장바구니에 추가된 상품입니다.');
             }
         //장바구니에 저장합니다.
-        const saveCart = await newCart.save();
+        await newCart.save();
         //장바구니에 제대로 저장이 되었는지 확인합니다.
         const checkCart = await Cart.find({ name, price, company, poster: modifyId });
             if(checkCart.length === 0){
@@ -39,12 +39,16 @@ const postCart = async (userId, cartAdd)=> {
         //장바구니 document의 ObjectId를 User Schema의 cart 필드에 추가합니다.
             const insertCart = await User.findByIdAndUpdate(
                 modifyId,
-                { $push: { cart: saveCart._id } },
+                { $push: { cart: newCart._id } },
                 { new: true }
             );
             //해당 유저의 장바구니 칸에도 상품 id 값이 제대로 저장 되었는지 확인합니다.
-            const userCartCheck = await User.findById(modifyId, { cart: saveCart._id });
-                if(!userCartCheck.cart.some(cartItem => cartItem.equals(saveCart._id))){
+            const userCartCheck = await User.findById(modifyId, { cart: newCart._id });
+                if(!userCartCheck.cart.some(cartItem => cartItem.equals(newCart._id))){
+                    /*만약 Cart Collection에 추가된 상품이 유저의 Cart 필드에 추가가 안될 경우
+                    추후에 같은 상품을 주문할 때 중복 오류가 발생할 수 있으므로 장바구니 Document를 찾아
+                    지워줘야 합니다.*/
+                    await Cart.findOneAndDelete({ _id: newCart._id })
                     throw new Error ('장바구니 추가 중 문제가 발생하였습니다.');
                 }
             return insertCart.cart;
