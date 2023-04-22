@@ -35,10 +35,10 @@ cartRouter.get('/:userId/view', authMiddleware, async (req, res)=> {
 //장바구니 삭제 라우터
 cartRouter.delete('/:userId/deleteOne', authMiddleware, async (req, res)=> {
     const userId = req.params;
-    const requestedThisInTheCart = req.body;
+    const cartDeleteOne = req.body;
 
     try {
-        await CartService.removeCart(userId, requestedThisInTheCart);
+        await CartService.removeCart(userId, cartDeleteOne);
         res.status(200).send('장바구니 삭제에 성공했습니다');
     } catch (err) {
         console.log(err);

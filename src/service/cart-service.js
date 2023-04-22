@@ -57,6 +57,7 @@ const postCart = async (userId, cartAdd)=> {
         };
 };
 
+
 //장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
 const presentCart = async (userId)=> {
     try{
@@ -73,7 +74,6 @@ const presentCart = async (userId)=> {
         if (cartItems.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
         }
-
         //장바구니에 담긴 상품들을 나열합니다.
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
@@ -90,7 +90,7 @@ const presentCart = async (userId)=> {
 
 
 //장바구니 목록 삭제
-const removeCart = async (userId, requestedThisInTheCart)=> {
+const removeCart = async (userId, cartDeleteOne)=> {
     try{
         //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
         if(!userId){
@@ -108,11 +108,11 @@ const removeCart = async (userId, requestedThisInTheCart)=> {
         //유저의 장바구니 품목을 삭제합니다.
         await User.findByIdAndUpdate(
             modifyId,
-            { $pull: { cart: requestedThisInTheCart } },
+            { $pull: { cart: cartDeleteOne } },
             { new: true }
         );
         //참조되고 있던 cart document도 같이 삭제합니다.
-        await Cart.findByIdAndDelete(requestedThisInTheCart);
+        await Cart.findByIdAndDelete(cartDeleteOne);
     } catch (err){
         throw new Error(`${err.message}`);
     }
