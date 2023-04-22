@@ -4,20 +4,38 @@ const {User} = require("../db/models/user-model");
 //주문 내역 확인
 const findOrder = async(userId) => {
 
-  const findUser = await Order.find({userId}).populate("customerId");
+  const getUserOrders = await Order.find({userId}).populate("customerId", "fullName");
 
-  if (!findUser) {
+  if (!getUserOrders) {
     throw new Error("주문 내역이 없습니다.");
   }
 
-  return findUser;
+  return getUserOrders;
 };
+
+//관리자 주문 내역 확인
+const adminFindOrder = async(adminId) => {
+  const admin = await User.findOne({_id: adminId});
+
+  //관리자인지 확인
+  if (admin.role !== "admin") {
+    throw new Error("접근 권한이 없습니다.");
+  }
+
+  const getUserOrders = await Order.find({}).populate("customerId");
+
+  if (!getUserOrders) {
+    throw new Error("주문 내역이 없습니다.");
+  }
+
+  return getUserOrders;
+}
 
 //새로운 주문 추가
 const addOrder = async(orderInfo) => {
   try {
     const {customerId, customerPhoneNumber, customerAddress, cart, orderStatus, total} = orderInfo;
-    const user = await User.findOne({customerId})
+    const order = await User.findOne({_id: customerId})
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
     if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
@@ -46,7 +64,7 @@ const addOrder = async(orderInfo) => {
     }
 
     const newOrder = new Order ({
-      customerId: user._id, //user의 ID를 받아옴
+      customerId: order._id, //user의 ID를 받아옴
       customerPhoneNumber,
       customerAddress,
       cart,
@@ -88,4 +106,4 @@ const deletedOrder = async(userId) => {
   }
 }
 
-module.exports = {findOrder, addOrder, updateOrder, deletedOrder};
+module.exports = {findOrder, adminFindOrder, addOrder, updateOrder, deletedOrder};

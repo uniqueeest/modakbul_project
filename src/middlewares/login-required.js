@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
 
   //토큰이 존재하지 않을 때
   if (!token) {
-    return res.status(403).json({
+    return res.status(401).json({
       success: false,
       message: "권한이 없습니다."
     })
