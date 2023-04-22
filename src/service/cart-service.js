@@ -7,7 +7,7 @@ const postCart = async (userId, cartAdd)=> {
     try{
         //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
         if(!userId){
-            throw new Error('먼저 로그인을 확인해 주세요');
+            throw new Error('먼저 로그인 상태를 확인해 주세요');
         }
         // Jwt 키 값을 API에 구현하기 위해 파라미터 키 값을 문자열로 변환합니다.
         const modifyId = JSON.stringify(userId)
@@ -55,13 +55,17 @@ const postCart = async (userId, cartAdd)=> {
 
 //장바구니 목록 띄우기(장바구니에 넣은 전체 상품을 표시합니다.)
 const presentCart = async (userId)=> {
+    try{
+    //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
+    if(!userId){
+        throw new Error('먼저 로그인 상태를 확인해 주세요');
+    }
     const modifyId = JSON.stringify(userId)
     .substring(11)
-    .slice(0,-2)
-    try {
+    .slice(0,-2);
         //해당 유저의 모든 장바구니 물품들의 내역을 표시합니다.
         const cartItems = await User.findById(modifyId).populate('cart');
-        //장바구니에 상품이 없다면 오류를 뱉어냅니다.
+        //장바구니에 상품이 없다면 오류를 출력합니다.
         if (cartItems.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
         }
@@ -76,17 +80,21 @@ const presentCart = async (userId)=> {
         }));
         return cartItemData;
     } catch (err) {
-        throw new Error ('장바구니를 확인해 주세요.')
+        throw new Error (`${err.message}`)
     };
 };
 
 
 //장바구니 목록 삭제
 const removeCart = async (userId, requestedThisInTheCart)=> {
+    try{
+        //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
+        if(!userId){
+            throw new Error('먼저 로그인 상태를 확인해 주세요');
+    }
     const modifyId = JSON.stringify(userId)
     .substring(11)
-    .slice(0,-2)        
-        try{
+    .slice(0,-2);
         //해당 유저의 물품들의 내역을 표시합니다.
         const usersCart = await User.findById(modifyId).populate('cart');
         //장바구니에 상품이 없다면 오류를 뱉어냅니다.
@@ -102,17 +110,21 @@ const removeCart = async (userId, requestedThisInTheCart)=> {
         //참조되고 있던 cart document도 같이 삭제합니다.
         await Cart.findByIdAndDelete(requestedThisInTheCart);
     } catch (err){
-        throw new Error('장바구니를 확인하세요');
+        throw new Error(`${err.message}`);
     }
 };
 
 
 //장바구니 목록 전체 삭제
 const removeAllCart = async (userId)=> {
+    try{
+        //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
+        if(!userId){
+            throw new Error('먼저 로그인 상태를 확인해 주세요');
+    }
     const modifyId = JSON.stringify(userId)
     .substring(11)
-    .slice(0,-2)   
-    try {    
+    .slice(0,-2);
         //해당 유저의 물품들의 내역을 표시합니다.
         const usersCart = await User.findById(modifyId).populate('cart');
         //장바구니에 상품이 없다면 오류를 뱉어냅니다.
@@ -126,7 +138,7 @@ const removeAllCart = async (userId)=> {
         await Cart.deleteMany({ _id: { $in: cartIds } });
         return;
     } catch (err) {
-        throw new Error ('장바구니를 확인해 주세요.');
+        throw new Error (`${err.message}`);
     }
 };
 
