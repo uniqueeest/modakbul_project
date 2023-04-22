@@ -9,7 +9,7 @@ const postCart = async (userId, cartAdd)=> {
         if(!userId){
             throw new Error('먼저 로그인 상태를 확인해 주세요');
         }
-        // Jwt 키 값을 API에 구현하기 위해 파라미터 키 값을 문자열로 변환합니다.
+        // ObjectId 값을 API 구현 과정에서 제대로 기능할 수 있도록 만들어줍니다.
         const modifyId = JSON.stringify(userId)
             .substring(11)
             .slice(0,-2);
@@ -131,12 +131,16 @@ const removeAllCart = async (userId)=> {
     .slice(0,-2);
         //해당 유저의 물품들의 내역을 표시합니다.
         const usersCart = await User.findById(modifyId).populate('cart');
-        //장바구니에 상품이 없다면 오류를 뱉어냅니다.
+        //장바구니에 상품이 없다면 오류를 출력합니다.
         if (usersCart.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
         }
         //장바구니에서 모든 상품을 삭제합니다.
         await User.findByIdAndUpdate(modifyId, { $set: { cart: [] } });
+        //만약 제대로 삭제되지 않았다면 오류를 출력합니다.
+        if (User.cart.length !== 0){
+            throw new Error ('삭제가 진행되지 않았습니다. 잠시 후 재시도 해주세요.');
+        }
         //참조되고 있던 cart document도 전부 삭제합니다.
         const cartIds = usersCart.cart.map((item)=> item._id);
         await Cart.deleteMany({ _id: { $in: cartIds } });
