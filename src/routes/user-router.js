@@ -22,7 +22,7 @@ userRouter.post("/login", async (req, res) => {
 
   try {
     const token = await userService.userLogin(loginInfo);
-    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 하루 (24시간)
+    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 1시간
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
@@ -31,7 +31,7 @@ userRouter.post("/login", async (req, res) => {
     });
     res.status(200).json({
       loginSuccess: true,
-      Token: token,
+      Token: token, // 개발 test 용 임시 토큰
     });
   } catch(err) {
     console.log(err);

@@ -25,6 +25,9 @@ const CartSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: "User",
     }
+},{
+  collection: "carts",
+  timestamps: true,
 });
 
 module.exports = CartSchema;
