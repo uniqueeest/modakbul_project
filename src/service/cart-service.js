@@ -82,6 +82,9 @@ const presentCart = async (userId)=> {
             company: item.company,
             quantity: item.quantity,
         }));
+        if(cartItemData.length === 0){
+            throw new Error ('장바구니에 상품이 출력되지 않았습니다.')
+        }
         return cartItemData;
     } catch (err) {
         throw new Error (`${err.message}`)
@@ -138,8 +141,9 @@ const removeAllCart = async (userId)=> {
         //장바구니에서 모든 상품을 삭제합니다.
         await User.findByIdAndUpdate(modifyId, { $set: { cart: [] } });
         //만약 제대로 삭제되지 않았다면 오류를 출력합니다.
-        if (User.cart.length !== 0){
-            throw new Error ('삭제가 진행되지 않았습니다. 잠시 후 재시도 해주세요.');
+        const usersCartUpdate = await User.findById(modifyId).populate('cart');
+        if(usersCartUpdate.cart.length !== 0){
+            throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
         }
         //참조되고 있던 cart document도 전부 삭제합니다.
         const cartIds = usersCart.cart.map((item)=> item._id);
