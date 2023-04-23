@@ -113,7 +113,6 @@ const removeCart = async (userIdKey, cartId)=> {
         );
         //장바구니의 품목이 삭제되었는지 확인합니다.
         const isThisCartDeleted = await User.find({ cart: newCartId });
-        console.log(isThisCartDeleted);
         if(isThisCartDeleted.length !== 0) {
             throw new Error ('장바구니에 상품이 지워지지 않았습니다.')
         };
