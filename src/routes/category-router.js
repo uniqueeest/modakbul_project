@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const CategoryService = require('../service/category-service');
 const CategoryController = require('../controller/category-controller');
 const categoryRouter = Router();
 
@@ -13,20 +12,7 @@ categoryRouter.get('/', CategoryController.getAllCategory);
 categoryRouter.get('/:major', CategoryController.findMajorCategory);
 
 // major 카테고리 이름 수정
-categoryRouter.patch('/:major', async (req, res) => {
-    try {
-      const {major} = req.params;
-      const {newMajor} = req.body;
-      const updatedCategory = await CategoryService.updateMajorName(major, newMajor);
-      res.status(200).json({
-        message: `major 카테고리 수정 성공!`,
-        categories: updatedCategory
-    });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send(`${err}`);
-    }
-  });
+categoryRouter.patch('/:major', CategoryController.updateMajorCategory);
 
 // 메이저 카테고리 삭제 기능
 categoryRouter.delete('/:major', CategoryController.deleteMajorCategory);

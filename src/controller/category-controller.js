@@ -70,10 +70,26 @@ const deleteMinorCategory = async (req, res) => {
     }
   };
 
+const updateMajorCategory = async (req, res) => {
+    try {
+      const {major} = req.params;
+      const {newMajor} = req.body;
+      const updatedCategory = await CategoryService.updateMajorName(major, newMajor);
+      res.status(200).json({
+        message: `major 카테고리 수정 성공!`,
+        categories: updatedCategory
+    });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(`${err}`);
+    }
+  };
+
 const categoryController = {
     createCategory,
     getAllCategory,
     findMajorCategory,
+    updateMajorCategory,
     deleteMajorCategory,
     deleteMinorCategory
 }
