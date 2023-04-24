@@ -42,9 +42,9 @@ const postCart = async (userIdKey, cartAdd)=> {
             //해당 유저의 장바구니 칸에도 상품 id 값이 제대로 저장 되었는지 확인합니다.
             const userCartCheck = await User.findById(userIdKey, { cart: newCart._id });
                 if(!userCartCheck.cart.some(cartItem => cartItem.equals(newCart._id))){
-                    /*만약 Cart Collection에 추가된 상품이 유저의 Cart 필드에 추가가 안될 경우
-                    추후에 같은 상품을 주문할 때 중복 오류가 발생할 수 있으므로 장바구니 Document를 찾아
-                    지워줘야 합니다.*/
+                    //만약 Cart Collection에 추가된 상품이 유저의 Cart 필드에 추가가 안될 경우
+                    //추후에 같은 상품을 주문할 때 중복 오류가 발생할 수 있으므로 장바구니 Document를 찾아
+                    //지워줘야 합니다.
                     await Cart.findOneAndDelete({ _id: newCart._id })
                     throw new Error ('장바구니 추가 중 문제가 발생하였습니다.');
                 };
@@ -90,12 +90,12 @@ const presentCart = async (userIdKey)=> {
 
 //장바구니 목록 삭제
 const removeCart = async (userIdKey, cartId)=> {
-    /*해당 부분은 실제로 프론트에서 어떠한 데이터 정보로 넘어오는지 확인 후
-    수정이 필요해 보입니다. 현재로써는 구현이 잘 됩니다.*/
-    const modifyCart = JSON.stringify(cartId)
+    //해당 부분은 실제로 프론트에서 어떠한 데이터 정보로 넘어오는지 확인 후
+    //수정이 필요해 보입니다. 현재로써는 구현이 잘 됩니다.
+    const modifyCartId = JSON.stringify(cartId)
     .substring(11)
     .slice(0,-2);
-    const newCartId = mongoose.Types.ObjectId(modifyCart)
+    const newCartId = mongoose.Types.ObjectId(modifyCartId)
     try{
         //맨 먼저 유저가 제대로 접속해 있는 상황인지 확인합니다.
         if(!userIdKey){
