@@ -45,11 +45,9 @@ const ProductSchema = new Schema ({
     type: String,  // 이미지 파일의 경로를 저장
     required: true,
   }
-},
-{
-  collection: 'products', // 몽고db의 categories라는 컬렉션에 이 스키마 저장
-  timestamps: true,  // 자동으로 문서가 생성된 시간과 마지막으로 업데이트한 시간 저장
-  }
-);
+}, {
+  collection: "products",
+  timestamps: true,
+});
 
 module.exports = ProductSchema;

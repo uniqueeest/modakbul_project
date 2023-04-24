@@ -70,6 +70,38 @@ const userLogin = async (loginInfo) => {
   return token;
 };
 
+//관리자 로그인
+const adminLogin = async (loginInfo) => {
+  const {email, password} = loginInfo;
+  
+  const admin = await User.findOne({email: email});
+
+
+  //이메일 일치 여부
+  if (!admin) {
+    throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
+  }
+
+  const userPassword = await bcrypt.compare(password, user.password);
+  
+
+  //비밀번호 일치 여부
+  if (!userPassword) {
+    throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
+  }
+
+  //로그인 성공 후 토큰 생성
+  const token = jwt.sign({
+    id: admin._id,
+    email: admin.email,
+    role: admin.role
+  }, 
+  "jwt-secret",
+  {expiresIn: "1h"} );
+
+  return token;
+};
+
 //유저 정보 확인
 const checkUserData = async (userId) => {
   const user = await User.findOne({_id: userId});
@@ -136,10 +168,10 @@ const deleteUser = async (userId) => {
 const userService = {
   userSignUp,
   userLogin,
+  adminLogin,
   checkUserData,
   updateUser,
-  deleteUser
+  deleteUser,
 };
 
 module.exports = userService;
-

@@ -4,20 +4,37 @@ const {User} = require("../db/models/user-model");
 //주문 내역 확인
 const findOrder = async(userId) => {
 
-  const findUser = await Order.find({userId}).populate("customerId");
+  const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "fullName");
 
-  if (!findUser) {
+  if (!getUserOrders) {
     throw new Error("주문 내역이 없습니다.");
   }
 
-  return findUser;
+  return getUserOrders;
 };
+
+//관리자) 주문 내역 확인
+const adminFindOrder = async() => {
+
+  try {
+    const getUserOrders = await Order.find({}).populate("customerId");
+
+    if (!getUserOrders || getUserOrders.length === 0) {
+      throw new Error("주문 내역이 없습니다.");
+    }
+
+    return getUserOrders;
+  } catch(err) {
+    throw err;
+  }
+  
+}
 
 //새로운 주문 추가
 const addOrder = async(orderInfo) => {
   try {
     const {customerId, customerPhoneNumber, customerAddress, cart, orderStatus, total} = orderInfo;
-    const user = await User.findOne({customerId})
+    const order = await User.findOne({_id: customerId})
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
     if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
@@ -46,7 +63,7 @@ const addOrder = async(orderInfo) => {
     }
 
     const newOrder = new Order ({
-      customerId: user._id, //user의 ID를 받아옴
+      customerId: order._id, //user의 ID를 받아옴
       customerPhoneNumber,
       customerAddress,
       cart,
@@ -55,24 +72,22 @@ const addOrder = async(orderInfo) => {
       orderNumber: createDateYYMMDD(),
     });
 
-    const savedOrder = newOrder.save();
-
-    return savedOrder;
+    return await newOrder.save();
   } catch(err) {
     throw new Error(`주문이 실패하였습니다. ${err}`);
   }
 }
 
-//주문 정보 업데이트
-const updateOrder = async(userId, orderInfo) => {
+//주문 수정
+const updateOrder = async(orderId, orderInfo) => {
   try {
-    const user = await Order.findById({_id: userId});
+    const user = await Order.findById({_id: orderId});
 
     if (!user) {
       throw new Error("주문 정보가 없습니다.");
     }
 
-    await Order.updateOne({userId}, orderInfo);
+    await Order.updateOne({orderId}, orderInfo);
   } catch(err) {
     throw err;
   }
@@ -80,12 +95,21 @@ const updateOrder = async(userId, orderInfo) => {
 }
 
 //주문 취소
-const deletedOrder = async(userId) => {
+const deletedOrder = async(orderId) => {
   try {
-    await Order.deleteOne({_id:userId});
+    await Order.deleteOne({_id:orderId});
   } catch(err) {
     throw err;
   }
 }
 
-module.exports = {findOrder, addOrder, updateOrder, deletedOrder};
+
+const OrderService = {
+  findOrder, 
+  adminFindOrder, 
+  addOrder, 
+  updateOrder, 
+  deletedOrder,
+};
+
+module.exports = OrderService;
