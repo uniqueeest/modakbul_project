@@ -1,4 +1,4 @@
-const cartservice = require('../service/cart-service');
+const cartService = require('../service/cart-service');
 
 const cartController = {
     //장바구니 추가 컨트롤러
@@ -7,7 +7,7 @@ const cartController = {
             const userIdKey = req.user.id;
             const cartAdd = req.body;
 
-            await cartservice.postCart(userIdKey, cartAdd);
+            await cartService.postCart(userIdKey, cartAdd);
             res.status(200).send('장바구니에 등록되었습니다.');
         } catch (err) {
             res.status(400).send(`${err}`);
@@ -17,7 +17,7 @@ const cartController = {
     async cartGet (req, res) {
         try{
             const userIdKey = req.user.id;
-            const cartItems = await cartservice.presentCart(userIdKey);
+            const cartItems = await cartService.presentCart(userIdKey);
             res.status(200).send(cartItems);
         } catch (err) {
             res.status(400).send(`${err}`);
@@ -29,7 +29,7 @@ const cartController = {
             const userIdKey = req.user.id;
             const cartId = req.params;
 
-            await cartservice.removeCart(userIdKey, cartId);
+            await cartService.removeCart(userIdKey, cartId);
             res.status(200).send('장바구니 삭제에 성공했습니다.');
         } catch (err) {
             res.status(400).send(`${err}`);
@@ -40,7 +40,7 @@ const cartController = {
         try {
             const userIdKey = req.user.id;
 
-            await cartservice.removeAllCart(userIdKey);
+            await cartService.removeAllCart(userIdKey);
             res.status(200).send('장바구니 전체 삭제에 성공했습니다.');
         } catch (err) {
             res.status(400).send(`${err}`);
