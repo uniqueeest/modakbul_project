@@ -34,6 +34,28 @@ const userLogin = async (req, res) => {
   }
 };
 
+const adminLogin = async (req, res) => {
+  const loginInfo = req.body;
+
+  try {
+    const token = await userService.userLogin(loginInfo);
+    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 1시간
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 60 * 60 * 1000,
+      secure: true,
+    });
+    res.status(200).json({
+      loginSuccess: true,
+      Token: token, // 개발 test 용 임시 토큰
+    });
+  } catch(err) {
+    console.log(err);
+    res.status(400).send(`${err}`);
+  }
+};
+
 const getUser = async (req, res, next) => {
   try {
     const {userId} = req.params;
@@ -89,6 +111,7 @@ const deleteUser = async(req, res, next) => {
 const userController = {
   signUp,
   userLogin,
+  adminLogin,
   getUser,
   createUser,
   deleteUser

@@ -20,11 +20,7 @@ const OrderSchema = new Schema({
         required: true,
         default: "상품 준비중"
     },
-    cart: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Cart',
-    }],
- 
+    cart: [],
     total: {
         type: Number,
         required: true,

@@ -3,11 +3,14 @@ const userRouter = Router();
 const userController = require("../controller/user-controller");
 const authMiddleware = require("../middlewares/login-required");
 
-//회원가입 라우터
+//회원가입
 userRouter.post("/sign-up", userController.signUp);
 
-//로그인 라우터
+//로그인
 userRouter.post("/login", userController.userLogin);
+
+//관리자 로그인
+userRouter.post("/admin-login", userController.adminLogin);
 
 // 유저 정보 확인
 userRouter.get("/:userId", authMiddleware, userController.getUser);
