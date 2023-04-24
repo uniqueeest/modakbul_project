@@ -46,7 +46,7 @@ const upload = multer({
 
 
 // 상품 등록
-productRouter.post('/add', upload.single("imgPath"), async (req, res) => {
+productRouter.post('/add', upload.single("img"), async (req, res) => {
     try {
         console.log(req);
         const product = await ProductService.addProduct({
