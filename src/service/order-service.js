@@ -4,7 +4,7 @@ const {User} = require("../db/models/user-model");
 //주문 내역 확인
 const findOrder = async(userId) => {
 
-  const getUserOrders = await Order.find({userId}).populate("customerId", "fullName");
+  const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "fullName");
 
   if (!getUserOrders) {
     throw new Error("주문 내역이 없습니다.");
@@ -13,22 +13,21 @@ const findOrder = async(userId) => {
   return getUserOrders;
 };
 
-//관리자 주문 내역 확인
-const adminFindOrder = async(adminId) => {
-  const admin = await User.findOne({_id: adminId});
+//관리자) 주문 내역 확인
+const adminFindOrder = async() => {
 
-  //관리자인지 확인
-  if (admin.role !== "admin") {
-    throw new Error("접근 권한이 없습니다.");
+  try {
+    const getUserOrders = await Order.find({}).populate("customerId");
+
+    if (!getUserOrders || getUserOrders.length === 0) {
+      throw new Error("주문 내역이 없습니다.");
+    }
+
+    return getUserOrders;
+  } catch(err) {
+    throw err;
   }
-
-  const getUserOrders = await Order.find({}).populate("customerId");
-
-  if (!getUserOrders) {
-    throw new Error("주문 내역이 없습니다.");
-  }
-
-  return getUserOrders;
+  
 }
 
 //새로운 주문 추가
@@ -73,24 +72,22 @@ const addOrder = async(orderInfo) => {
       orderNumber: createDateYYMMDD(),
     });
 
-    const savedOrder = newOrder.save();
-
-    return savedOrder;
+    return await newOrder.save();
   } catch(err) {
     throw new Error(`주문이 실패하였습니다. ${err}`);
   }
 }
 
-//주문 정보 업데이트
-const updateOrder = async(userId, orderInfo) => {
+//주문 수정
+const updateOrder = async(orderId, orderInfo) => {
   try {
-    const user = await Order.findById({_id: userId});
+    const user = await Order.findById({_id: orderId});
 
     if (!user) {
       throw new Error("주문 정보가 없습니다.");
     }
 
-    await Order.updateOne({userId}, orderInfo);
+    await Order.updateOne({orderId}, orderInfo);
   } catch(err) {
     throw err;
   }
@@ -98,12 +95,21 @@ const updateOrder = async(userId, orderInfo) => {
 }
 
 //주문 취소
-const deletedOrder = async(userId) => {
+const deletedOrder = async(orderId) => {
   try {
-    await Order.deleteOne({_id:userId});
+    await Order.deleteOne({_id:orderId});
   } catch(err) {
     throw err;
   }
 }
 
-module.exports = {findOrder, adminFindOrder, addOrder, updateOrder, deletedOrder};
+
+const OrderService = {
+  findOrder, 
+  adminFindOrder, 
+  addOrder, 
+  updateOrder, 
+  deletedOrder,
+};
+
+module.exports = OrderService;

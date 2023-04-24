@@ -1,81 +1,28 @@
 const {Router} = require("express");
-const OrderService = require("../service/order-service");
 const orderRouter = Router();
+const orderController = require("../controller/order-controller");
 const authMiddleware = require("../middlewares/login-required");
+const adminMiddleware = require("../middlewares/admin-required");
 
 //주문 정보 조회
-orderRouter.get("/:userId", authMiddleware, async(req, res, next) => {
-  try {
-    const {userId} = req.params;
-    const orderInfo = await OrderService.findOrder(userId);
-    if (!orderInfo) {
-      res.status(400).json({
-        message: "주문이 존재하지 않습니다."
-      });
-    }
+orderRouter.get("/:userId", authMiddleware, orderController.getOrder);
 
-    res.status(200).send(orderInfo);
-  } catch(err){
-    next(err);
-  }
-});
-
-//관리자 주문 정보 조회
-orderRouter.get("/:adminId", authMiddleware, async(req, res, next) => {
-  try {
-    const {adminId} = req.params;
-    const orderInfo = await OrderService.adminFindOrder(adminId);
-    if (!orderInfo) {
-      res.status(400).json({
-        message: "주문이 존재하지 않습니다."
-      });
-    }
-
-    res.status(200).send(orderInfo);
-  } catch(err) {
-    next(err);
-  }
-})
+//관리자) 주문 정보 조회
+orderRouter.get("/", authMiddleware, adminMiddleware, orderController.adminGetOrder);
 
 //새로운 주문 추가
-orderRouter.post("/", authMiddleware, async(req, res, next) => {
-  try {
-    const orderInfo = req.body;
-    await OrderService.addOrder(orderInfo);
-
-    res.status(200).send("주문이 완료되었습니다.");
-  } catch(err) {
-    next(err);
-  }
-});
+orderRouter.post("/", authMiddleware, orderController.createOrder);
 
 //주문 수정
-orderRouter.patch("/:userId", authMiddleware, async(req, res, next) => {
-  try {
-    const {userId} = req.params;
-    const orderInfo = req.body;
-    if (!orderInfo) {
-      res.status(400).json({
-        message: "변경할 주문이 입력되지 않았습니다."
-      });
-    }
-    OrderService.updateOrder(userId, orderInfo);
-    res.status(200).send("주문이 정상적으로 변경되었습니다.");
-  } catch(err) {
-    next(err);
-  }
-});
+orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);
 
-//주문 삭제
-orderRouter.delete("/:userId", authMiddleware, async(req, res, next) => {
-  try {
-    const {userId} = req.params;
-    await OrderService.deletedOrder(userId);
+//관리자) 주문 수정
+orderRouter.patch("/admin/:orderId", authMiddleware, adminMiddleware, orderController.adminUpdateOrder);
 
-    res.status(200).send("주문이 취소되었습니다!");
-  } catch(err) {
-    next(err);
-  }
-});
+//주문 취소
+orderRouter.delete("/:orderId", authMiddleware, orderController.deleteOrder);
+
+//관리자) 주문 취소
+orderRouter.delete("/admin/:orderId", authMiddleware, adminMiddleware, orderController.adminDeleteOrder);
 
 module.exports = orderRouter;
