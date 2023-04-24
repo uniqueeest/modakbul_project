@@ -10,7 +10,7 @@ const cartController = {
             await cartservice.postCart(userIdKey, cartAdd);
             res.status(200).send('장바구니에 등록되었습니다.');
         } catch (err) {
-            res.status(500).send(`${err}`);
+            res.status(400).send(`${err}`);
         };
     },
     //장바구니 조회 컨트롤러
@@ -20,7 +20,7 @@ const cartController = {
             const cartItems = await cartservice.presentCart(userIdKey);
             res.status(200).send(cartItems);
         } catch (err) {
-            netx (err);
+            res.status(400).send(`${err}`);
         };
     },
     //장바구니 개별 삭제 컨트롤러
@@ -32,7 +32,7 @@ const cartController = {
             await cartservice.removeCart(userIdKey, cartId);
             res.status(200).send('장바구니 삭제에 성공했습니다.');
         } catch (err) {
-            res.status(500).send(`${err}`);
+            res.status(400).send(`${err}`);
         }
     },
     //장바구니 전체 삭제 컨트롤러
@@ -43,7 +43,7 @@ const cartController = {
             await cartservice.removeAllCart(userIdKey);
             res.status(200).send('장바구니 전체 삭제에 성공했습니다.');
         } catch (err) {
-            res.status(500).send(`${err}`);
+            res.status(400).send(`${err}`);
         }
     }
 };
