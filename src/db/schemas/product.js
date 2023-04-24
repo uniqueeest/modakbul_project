@@ -45,6 +45,9 @@ const ProductSchema = new Schema ({
     type: String,  // 이미지 파일의 경로를 저장
     required: true,
   }
+}, {
+  collection: "products",
+  timestamps: true,
 });
 
 module.exports = ProductSchema;

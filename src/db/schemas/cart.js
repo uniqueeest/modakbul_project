@@ -30,6 +30,9 @@ const CartSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     }
+},{
+  collection: "carts",
+  timestamps: true,
 });
 
 module.exports = CartSchema;
