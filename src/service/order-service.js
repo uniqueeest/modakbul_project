@@ -34,7 +34,7 @@ const adminFindOrder = async() => {
 const addOrder = async(orderInfo) => {
   try {
     const {customerId, customerPhoneNumber, customerAddress, cart, orderStatus, total} = orderInfo;
-    const order = await User.findOne({_id: customerId})
+    const order = await User.findOne({_id: customerId}).lean();
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
     if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
