@@ -41,7 +41,7 @@ const ProductSchema = new Schema ({
     required: true,
   },
   //이미지
-  img: {
+  imgPath: {
     type: String,  // 이미지 파일의 경로를 저장
     required: true,
   }
@@ -49,5 +49,6 @@ const ProductSchema = new Schema ({
   collection: "products",
   timestamps: true,
 });
+
 
 module.exports = ProductSchema;
