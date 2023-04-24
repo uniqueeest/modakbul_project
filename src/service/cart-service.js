@@ -117,7 +117,7 @@ const removeCart = async (userIdKey, cartId)=> {
         const isThisCartDeleted = await User.find({ cart: newCartId });
         console.log(isThisCartDeleted);
         if(isThisCartDeleted.length !== 0) {
-            throw new Error ('장바구니에 상품이 지워지지 않았습니다.')
+            throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
         };
         //참조되고 있던 cart document도 같이 삭제합니다.
         await Cart.deleteOne({ _id: newCartId });
