@@ -67,6 +67,7 @@ const findMinorCategory = async (major) => {
     }
 }
 
+// 포스트맨에서는 제대로 동작한다고 메시지 뜨지만 반영이 안됨
 const updateMajorName = async (major, newMajor) => {
     try {
         const category = await Category.findOneAndUpdate(
@@ -103,4 +104,4 @@ const deleteMinorCategory = async (major, minor) => {
     }
 };
 
-module.exports = { addCategory, findAll, findMajorCategory, findMinorCategory, updateMajorName, deleteMajorCategory, deleteMinorCategory };
+module.exports = { addCategory, findAll, findMajorCategory, findMinorCategory, updateMajorName, deleteMajorCategory, deleteMinorCategory};
