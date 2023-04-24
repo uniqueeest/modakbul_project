@@ -14,6 +14,7 @@ const postCart = async (userIdKey, cartAdd)=> {
 
         //장바구니에 추가
         const newCart = new Cart ({
+            imgURL,
             name,
             price,
             company,
@@ -71,6 +72,7 @@ const presentCart = async (userIdKey)=> {
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
             _id: item._id,
+            imgURL : item.imgURL,
             name: item.name,
             price: item.price,
             company: item.company,
@@ -113,6 +115,7 @@ const removeCart = async (userIdKey, cartId)=> {
         );
         //장바구니의 품목이 삭제되었는지 확인합니다.
         const isThisCartDeleted = await User.find({ cart: newCartId });
+        console.log(isThisCartDeleted);
         if(isThisCartDeleted.length !== 0) {
             throw new Error ('장바구니에 상품이 지워지지 않았습니다.')
         };
@@ -153,4 +156,11 @@ const removeAllCart = async (userIdKey)=> {
     }
 };
 
-module.exports = { postCart, presentCart, removeCart, removeAllCart };
+const cartService = {
+    postCart,
+    presentCart,
+    removeCart,
+    removeAllCart
+};
+
+module.exports = cartService;
