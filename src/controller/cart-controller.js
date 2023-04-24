@@ -1,4 +1,4 @@
-const cartservice = require('../service/cart-service');
+const cartservice = require('./service/cart-service');
 
 const cartController = {
     //장바구니 추가 컨트롤러
