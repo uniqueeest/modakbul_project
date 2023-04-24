@@ -1,5 +1,19 @@
 const ProductService = require('../service/product-service');
 
+const createProduct = async(req, res, next) => {
+  try {
+    const productInfo = req.body;
+    const imagePath = req.file.path;
+
+    await ProductService.addProduct(productInfo, imagePath);
+
+    res.status(200).send("상품이 등록되었습니다.");
+
+  } catch(err) {
+    next(err);
+  }
+};
+
 const findAllProduct = async (req, res) => {
     try {
         const products = await ProductService.findAll();
@@ -67,10 +81,11 @@ const deleteProduct = async (req, res) => {
   };
 
 const productController = {
-    findAllProduct,
-    findOneProduct,
-    updateProduct,
-    deleteProduct
+  createProduct,
+  findAllProduct,
+  findOneProduct,
+  updateProduct,
+  deleteProduct
 };
 
 module.exports = productController;
