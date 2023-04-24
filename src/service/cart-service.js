@@ -105,7 +105,7 @@ const removeCart = async (userIdKey, cartId)=> {
         const usersCart = await User.findById(userIdKey).populate('cart');
         //장바구니에 상품이 없다면 오류를 출력합니다.
         if (usersCart.cart.length === 0){
-            throw new Error ('장바구니에 담긴 물품이 없습니다.');
+            throw new Error ('현재 장바구니에 상품이 없습니다.');
         };
         //유저의 장바구니 품목을 삭제합니다.
         await User.findByIdAndUpdate(
