@@ -10,7 +10,7 @@ const postCart = async (userIdKey, cartAdd)=> {
             throw new Error('먼저 로그인 상태를 확인해 주세요');
         };
         //추가하려는 물품의 이름, 가격, 회사, 구매수량을 추가합니다.
-        const { name, price, company, quantity } = cartAdd;
+        const { imgURL, name, price, company, quantity } = cartAdd;
 
         //장바구니에 추가
         const newCart = new Cart ({
@@ -79,7 +79,7 @@ const presentCart = async (userIdKey)=> {
             quantity: item.quantity,
         }));
         if(cartItemData.length === 0){
-            throw new Error ('장바구니에 상품이 출력되지 않았습니다.')
+            throw new Error ('장바구니에 상품이 출력 되지 않았습니다.')
         };
         return cartItemData;
     } catch (err) {
