@@ -7,8 +7,12 @@ const adminMiddleware = require("../middlewares/admin-required");
 //관리자) 주문 정보 조회
 orderRouter.get("/admin", authMiddleware, adminMiddleware, orderController.adminGetOrder);
 
+//비회원 주문 정보 조회
+orderRouter.get("/:orderNumber", orderController.nonMemberGetOrder);
+
 //주문 정보 조회
-orderRouter.get("/:userId", authMiddleware, orderController.getOrder);
+orderRouter.get("/order/:userId", authMiddleware, orderController.getOrder);
+
 
 //새로운 주문 추가
 orderRouter.post("/", authMiddleware, orderController.createOrder);
