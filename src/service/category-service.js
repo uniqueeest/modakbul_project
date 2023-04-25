@@ -85,15 +85,14 @@ const updateMajorName = async (major, newMajor) => {
     }
 };
 
-const updateMinorName = async (major, oldMinor, newMinor) => {
+const updateMinorName = async (major, minor, newMinor) => {
     const modifyMinor = JSON.stringify(newMinor)
         .substring(10)
         .slice(0,-2);
-        console.log(modifyMinor);
         
     try {
       const category = await Category.findOneAndUpdate(
-        { major: major, minor: oldMinor },
+        { major: major, minor: minor },
         { $set: { "minor.$": modifyMinor } },
         { new: true }
       );
