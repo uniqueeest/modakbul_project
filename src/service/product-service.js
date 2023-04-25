@@ -1,5 +1,5 @@
 const { Product } = require("../db/models/product-model");
-
+const { Category } = require('../db/models/category-model');
 
 
 
@@ -7,6 +7,7 @@ const { Product } = require("../db/models/product-model");
 const addProduct = async (productInfo, imagePath) => {
   try{
     const {name, price, category, description, summary, company, stock} = productInfo;
+    const categoryName = await Category.findOne({_id: category});
 
     // 상품 이름 중복 체크 
     const nameDuplicate = await Product.findOne({ name });
@@ -19,13 +20,14 @@ const addProduct = async (productInfo, imagePath) => {
     const newProduct = new Product ({
       name,
       price,
-      category,
+      category: categoryName.name,
       description,
       summary,
       company,
       stock,
       imgPath: imagePath,
     });
+    console.log(newProduct);
 
     // 상품 정보 저장
     const savedProduct = await newProduct.save();
