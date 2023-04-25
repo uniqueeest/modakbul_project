@@ -44,25 +44,26 @@ const findOneProduct = async(req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    const { productId } = req.params;
-    const productInfo = req.body;
-  
-    try {
-      const updatedProduct = await ProductService.updateProduct(productId, productInfo);
-  
-      if (!updatedProduct) {
-        return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
-      }
-  
-      res.status(200).json({
-        message: '상품 수정 성공!',
-        product: updatedProduct
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: '서버 에러' });
+  const { productId } = req.params;
+  const productInfo = req.body;
+
+  try {
+    const updatedProduct = await ProductService.updateProduct(productId, productInfo);
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
     }
-  };
+
+    res.status(200).json({
+      message: '상품 수정 성공!',
+      product: updatedProduct
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: '서버 에러' });
+  }
+};
+
 
 const deleteProduct = async (req, res) => {
     const name = req.params.name;

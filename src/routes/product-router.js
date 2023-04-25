@@ -15,7 +15,7 @@ productRouter.get('/:name', ProductController.findOneProduct);
 
 
 //특정 상품 정보 수정
-productRouter.patch('/:productId', ProductController.updateProduct);
+productRouter.patch('/:productId', multerMiddleware.upload.single("imgPath"), ProductController.updateProduct);
 
 //특정 상품 삭제
 productRouter.delete('/:name', ProductController.deleteProduct);
