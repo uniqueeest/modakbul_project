@@ -19,7 +19,7 @@ const cartGet = async (req, res) => {
     try{
         const userIdKey = req.user.id;
         const cartItems = await cartService.presentCart(userIdKey);
-        res.status(200).json({ message: '장바구니 조회에 성공했습니다.' });
+        res.status(200).json(cartItems);
     } catch (err) {
         res.status(400).json({ message: `${err}` });
     };
