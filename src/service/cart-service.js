@@ -78,9 +78,9 @@ const presentCart = async (userIdKey)=> {
             company: item.company,
             quantity: item.quantity,
         }));
-        if(cartItemData.length === 0){
+        /*if(cartItemData.length === 0){
             throw new Error ('장바구니에 상품이 출력 되지 않았습니다.')
-        };
+        };*/
         return cartItemData;
     } catch (err) {
         throw new Error (`${err.message}`)
