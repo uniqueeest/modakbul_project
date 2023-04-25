@@ -14,6 +14,9 @@ categoryRouter.get('/:major', CategoryController.findMajorCategory);
 // major 카테고리 이름 수정
 categoryRouter.patch('/:major', CategoryController.updateMajorCategory);
 
+// minor 카테고리 이름 수정
+categoryRouter.put('/:major/:oldMinor', CategoryController.updateMinorCategory);
+
 // 메이저 카테고리 삭제 기능
 categoryRouter.delete('/:major', CategoryController.deleteMajorCategory);
 

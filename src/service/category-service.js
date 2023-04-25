@@ -85,6 +85,24 @@ const updateMajorName = async (major, newMajor) => {
     }
 };
 
+const updateMinorName = async (major, oldMinor, newMinor) => {
+    const modifyMinor = JSON.stringify(newMinor)
+        .substring(10)
+        .slice(0,-2);
+        console.log(modifyMinor);
+        
+    try {
+      const category = await Category.findOneAndUpdate(
+        { major: major, minor: oldMinor },
+        { $set: { "minor.$": modifyMinor } },
+        { new: true }
+      );
+      return category;
+    } catch (err) {
+      throw new Error(`카테고리 이름 수정에 실패했습니다. ${err.message}`);
+    }
+  };
+
 const deleteMajorCategory = async (major) => {
     try {
         const deleteCategory = await Category.deleteOne({major});
@@ -108,4 +126,4 @@ const deleteMinorCategory = async (major, minor) => {
     }
 };
 
-module.exports = { addCategory, findAll, findMajorCategory, findMinorCategory, updateMajorName, deleteMajorCategory, deleteMinorCategory};
+module.exports = { addCategory, findAll, findMajorCategory, findMinorCategory, updateMajorName, updateMinorName, deleteMajorCategory, deleteMinorCategory};
