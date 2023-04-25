@@ -65,9 +65,9 @@ const presentCart = async (userIdKey)=> {
         //해당 유저의 모든 장바구니 물품들의 내역을 표시합니다.
         const cartItems = await User.findById(userIdKey).populate('cart');
         //장바구니에 상품이 없다면 오류를 출력합니다.
-        if (cartItems.cart.length === 0){
+        /*if (cartItems.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
-        };
+        };*/
         //장바구니에 담긴 상품들을 나열합니다.
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
