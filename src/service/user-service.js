@@ -82,7 +82,7 @@ const adminLogin = async (loginInfo) => {
     throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
   }
 
-  const userPassword = await bcrypt.compare(password, user.password);
+  const userPassword = await bcrypt.compare(password, admin.password);
   
 
   //비밀번호 일치 여부
@@ -94,10 +94,10 @@ const adminLogin = async (loginInfo) => {
   const token = jwt.sign({
     id: admin._id,
     email: admin.email,
-    role: admin.role
   }, 
   "jwt-secret",
   {expiresIn: "1h"} );
+
 
   return token;
 };

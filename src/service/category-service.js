@@ -67,19 +67,23 @@ const findMinorCategory = async (major) => {
     }
 }
 
-// 포스트맨에서는 제대로 동작한다고 메시지 뜨지만 반영이 안됨
+// major 카테고리 이름 수정 
 const updateMajorName = async (major, newMajor) => {
+
+    const modifyMajor = JSON.stringify(newMajor)
+        .substring(10)
+        .slice(0,-2);
     try {
         const category = await Category.findOneAndUpdate(
             {major},
-            {$set: {major: newMajor}},
+            {$set: {major: modifyMajor}},
             {new: true}
         );
         return category;
     } catch (err) {
         throw new Error(`카테고리 이름 수정에 실패했습니다. ${err.message}`);
     }
-}
+};
 
 const deleteMajorCategory = async (major) => {
     try {

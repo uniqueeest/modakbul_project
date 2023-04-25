@@ -28,13 +28,38 @@ const adminFindOrder = async() => {
     throw err;
   }
   
-}
+};
+
+const nonMemberFindOrder = async(orderNumber) => {
+
+  try {
+    const getUserOrders = await Order.findOne({orderNumber})
+
+    if (!getUserOrders || getUserOrders.length === 0) {
+      throw new Error("주문 내역이 없습니다.");
+    }
+
+    return getUserOrders;
+  } catch(err) {
+    throw err;
+  }
+  
+};
 
 //새로운 주문 추가
 const addOrder = async(orderInfo) => {
   try {
-    const {customerId, customerPhoneNumber, customerAddress, cart, orderStatus, total} = orderInfo;
-    const order = await User.findOne({_id: customerId})
+    const {
+      customerId, 
+      customerName, 
+      customerEmail, 
+      customerPhoneNumber, 
+      customerAddress, 
+      cart, 
+      orderStatus, 
+      total
+    } = orderInfo;
+    const order = await User.findOne({_id: customerId}).lean();
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
     if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
@@ -62,8 +87,24 @@ const addOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     }
 
+    // 회원 주문
+    if (customerId) {
+      const newOrder = new Order ({
+        customerId: order._id, //user의 ID를 받아옴
+        customerPhoneNumber,
+        customerAddress,
+        cart,
+        orderStatus,
+        total,
+        orderNumber: createDateYYMMDD(),
+      });
+      return await newOrder.save();
+    }
+
+    // 비회원 주문
     const newOrder = new Order ({
-      customerId: order._id, //user의 ID를 받아옴
+      customerName,
+      customerEmail,
       customerPhoneNumber,
       customerAddress,
       cart,
@@ -71,12 +112,13 @@ const addOrder = async(orderInfo) => {
       total,
       orderNumber: createDateYYMMDD(),
     });
-
     return await newOrder.save();
+
+    
   } catch(err) {
     throw new Error(`주문이 실패하였습니다. ${err}`);
   }
-}
+};
 
 //주문 수정
 const updateOrder = async(orderId, orderInfo) => {
@@ -92,7 +134,7 @@ const updateOrder = async(orderId, orderInfo) => {
     throw err;
   }
 
-}
+};
 
 //주문 취소
 const deletedOrder = async(orderId) => {
@@ -101,12 +143,13 @@ const deletedOrder = async(orderId) => {
   } catch(err) {
     throw err;
   }
-}
+};
 
 
 const OrderService = {
   findOrder, 
   adminFindOrder, 
+  nonMemberFindOrder,
   addOrder, 
   updateOrder, 
   deletedOrder,
