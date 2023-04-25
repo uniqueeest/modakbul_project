@@ -1,4 +1,5 @@
 const userService = require("../service/user-service");
+const {User} = require("../db/models/user-model");
 
 const signUp = async (req, res) => {
   const userInfo = req.body;
@@ -39,6 +40,7 @@ const adminLogin = async (req, res) => {
 
   try {
     const token = await userService.userLogin(loginInfo);
+    const admin = await User.findOne({email: req.body.email});
     // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 1시간
     res.cookie("token", token, {
       httpOnly: true,
@@ -49,6 +51,7 @@ const adminLogin = async (req, res) => {
     res.status(200).json({
       loginSuccess: true,
       Token: token, // 개발 test 용 임시 토큰
+      role: admin.role,
     });
   } catch(err) {
     console.log(err);

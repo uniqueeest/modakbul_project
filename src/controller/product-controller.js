@@ -82,7 +82,6 @@ const deleteProduct = async (req, res) => {
   };
 
 const productController = {
-    createProduct,
     findAllProduct,
     findOneProduct,
     updateProduct,

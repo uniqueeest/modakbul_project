@@ -33,8 +33,17 @@ const adminFindOrder = async() => {
 //새로운 주문 추가
 const addOrder = async(orderInfo) => {
   try {
-    const {customerId, customerPhoneNumber, customerAddress, cart, orderStatus, total} = orderInfo;
-    const order = await User.findOne({_id: customerId})
+    const {
+      customerId, 
+      customerName, 
+      customerEmail, 
+      customerPhoneNumber, 
+      customerAddress, 
+      cart, 
+      orderStatus, 
+      total
+    } = orderInfo;
+    const order = await User.findOne({_id: customerId}).lean();
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
     if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
@@ -62,8 +71,24 @@ const addOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     }
 
+    // 회원 주문
+    if (customerId) {
+      const newOrder = new Order ({
+        customerId: order._id, //user의 ID를 받아옴
+        customerPhoneNumber,
+        customerAddress,
+        cart,
+        orderStatus,
+        total,
+        orderNumber: createDateYYMMDD(),
+      });
+      return await newOrder.save();
+    }
+
+    // 비회원 주문
     const newOrder = new Order ({
-      customerId: order._id, //user의 ID를 받아옴
+      customerName,
+      customerEmail,
       customerPhoneNumber,
       customerAddress,
       cart,
@@ -71,8 +96,9 @@ const addOrder = async(orderInfo) => {
       total,
       orderNumber: createDateYYMMDD(),
     });
-
     return await newOrder.save();
+
+    
   } catch(err) {
     throw new Error(`주문이 실패하였습니다. ${err}`);
   }

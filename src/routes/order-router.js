@@ -4,11 +4,11 @@ const orderController = require("../controller/order-controller");
 const authMiddleware = require("../middlewares/login-required");
 const adminMiddleware = require("../middlewares/admin-required");
 
+//관리자) 주문 정보 조회
+orderRouter.get("/admin", authMiddleware, adminMiddleware, orderController.adminGetOrder);
+
 //주문 정보 조회
 orderRouter.get("/:userId", authMiddleware, orderController.getOrder);
-
-//관리자) 주문 정보 조회
-orderRouter.get("/", authMiddleware, adminMiddleware, orderController.adminGetOrder);
 
 //새로운 주문 추가
 orderRouter.post("/", authMiddleware, orderController.createOrder);
