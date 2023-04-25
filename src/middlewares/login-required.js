@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 //jwt 검증 미들웨어
 const authMiddleware = (req, res, next) => {
-  const token = req.headers['x-access-token'] || req.query.token;
+  const token = req.headers.authorization.split(" ")[1];
 
   //토큰이 존재하지 않을 때
   if (!token) {
