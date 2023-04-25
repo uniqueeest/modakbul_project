@@ -28,10 +28,10 @@ const getAllCategory = async (req, res) => {
     }
 };
 
-const findMajorCategory = async (req, res) => {
-    const {major} = req.params;
+const findCategoryName = async (req, res) => {
+    const {name} = req.params;
     try {
-        const category = await CategoryService.findMajorCategory(major);
+        const category = await CategoryService.findCategory(name);
         res.status(200).json({
             message: `major 카테고리 조회 성공!`,
             categories: category
@@ -42,10 +42,10 @@ const findMajorCategory = async (req, res) => {
     }
 };
 
-const deleteMajorCategory = async (req, res) => {
-    const {major} = req.params;
+const deleteCategory = async (req, res) => {
+    const {name} = req.params;
     try {
-        const deleteCategory = await CategoryService.deleteMajorCategory(major);
+        const deleteCategory = await CategoryService.deleteCategory(name);
         res.status(200).json({
             message: `카테고리 삭제 성공!`,
             categories: deleteCategory
@@ -56,25 +56,11 @@ const deleteMajorCategory = async (req, res) => {
     }
 };
 
-const deleteMinorCategory = async (req, res) => {
-    const { major, minor } = req.params;
+const updateCategory = async (req, res) => {
     try {
-      const deletedCategory = await CategoryService.deleteMinorCategory(major, minor);
-      res.status(200).json({
-        message: `카테고리 삭제 성공!`,
-        category: deletedCategory
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send(`${err}`);
-    }
-  };
-
-const updateMajorCategory = async (req, res) => {
-    try {
-      const {major} = req.params;
-      const newMajor = req.body;
-      const updatedCategory = await CategoryService.updateMajorName(major, newMajor);
+      const {name} = req.params;
+      const newName = req.body;
+      const updatedCategory = await CategoryService.updateCategoryName(name, newName);
       res.status(200).json({
         message: `major 카테고리 수정 성공!`,
         categories: updatedCategory
@@ -85,26 +71,12 @@ const updateMajorCategory = async (req, res) => {
     }
   };
 
-const updateMinorCategory = async (req, res) => {
-    try {
-      const { major, minor } = req.params;
-      const newMinor = req.body;
-      const updatedCategory = await CategoryService.updateMinorName(major, minor, newMinor);
-  
-      res.status(200).json(updatedCategory);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  };
-
 const categoryController = {
     createCategory,
     getAllCategory,
-    findMajorCategory,
-    updateMajorCategory,
-    updateMinorCategory,
-    deleteMajorCategory,
-    deleteMinorCategory
+    findCategoryName,
+    updateCategory,
+    deleteCategory,
 }
 
 
