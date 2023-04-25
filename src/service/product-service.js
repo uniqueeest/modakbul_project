@@ -1,6 +1,9 @@
 const { Product } = require("../db/models/product-model");
 
-// 상품 등록
+
+
+
+// 상품 추가
 const addProduct = async (productInfo, imagePath) => {
   try{
     const {name, price, category, description, summary, company, stock} = productInfo;
@@ -31,8 +34,9 @@ const addProduct = async (productInfo, imagePath) => {
   } catch(err) {
     throw err;
   }
+};
 
-}
+
 // 모든 상품 정보 조회
 const findAll = async () => {
     try {
@@ -66,14 +70,15 @@ const findProductByName = async (name) => {
 // productId = db에서 제공하는 ObjectId 
 // 몽고db에서 제공하는 findByIdAndUpdate 메서드를 사용, 첫번째 인자 = ObjectId, 
 const updateProduct = async (productId, productInfo) => {
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(productId, productInfo, {new: true});
+  try {
+      const updatedProduct = await Product.findByIdAndUpdate(productId, productInfo, {new: true});
 
-        return updatedProduct;
-    } catch (err) {
-        throw new Error(`상품 수정 실패: ${err.message}`);
-    }
-}
+      return updatedProduct;
+  } catch (err) {
+      throw new Error(`상품 수정 실패: ${err.message}`);
+  }
+};
+
 
 //특정 상품정보 삭제
 const deleteProduct = async (name) => {
