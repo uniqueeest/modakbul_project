@@ -33,7 +33,7 @@ const findCategoryName = async (req, res) => {
     try {
         const category = await CategoryService.findCategory(name);
         res.status(200).json({
-            message: `major 카테고리 조회 성공!`,
+            message: `특정 카테고리 조회 성공!`,
             categories: category
         });
     } catch (err) {
@@ -62,7 +62,7 @@ const updateCategory = async (req, res) => {
       const newName = req.body;
       const updatedCategory = await CategoryService.updateCategoryName(name, newName);
       res.status(200).json({
-        message: `major 카테고리 수정 성공!`,
+        message: `카테고리 수정 성공!`,
         categories: updatedCategory
     });
     } catch (err) {
