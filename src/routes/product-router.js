@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const ProductController = require('../controller/product-controller');
-const multerMiddleware  = require("../middlewares/multer")
 const productRouter = Router();
 const multerMiddleware = require('../middlewares/multer');
 
@@ -13,7 +12,6 @@ productRouter.get('/', ProductController.findAllProduct);
 
 // 특정 상품 정보 조회
 productRouter.get('/:name', ProductController.findOneProduct);
-
 
 //특정 상품 정보 수정
 productRouter.patch('/:productId', multerMiddleware.upload.single("imgPath"), ProductController.updateProduct);

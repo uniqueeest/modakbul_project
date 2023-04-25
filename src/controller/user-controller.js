@@ -48,6 +48,12 @@ const adminLogin = async (req, res) => {
       maxAge: 60 * 60 * 1000,
       secure: true,
     });
+
+    if (admin.role !== "admin") {
+      return res.status(400).json({
+        message: "권한이 없습니다.",
+      });
+    }
     res.status(200).json({
       loginSuccess: true,
       Token: token, // 개발 test 용 임시 토큰
