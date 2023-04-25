@@ -31,6 +31,22 @@ const adminGetOrder = async(req, res, next) => {
   }
 };
 
+const nonMemberGetOrder = async(req, res, next) => {
+  try {
+    const {orderNumber} = req.params;
+    const orderInfo = await OrderService.nonMemberFindOrder(orderNumber);
+    if (!orderInfo) {
+      res.status(400).json({
+        message: "주문이 존재하지 않습니다."
+      });
+    }
+
+    res.status(200).send(orderInfo);
+  } catch(err) {
+    next(err);
+  }
+};
+
 const createOrder = async(req, res, next) => {
   try {
     const orderInfo = req.body;
@@ -78,6 +94,11 @@ const deleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
     await OrderService.deletedOrder(orderId);
+    if (!orderInfo) {
+      res.status(400).json({
+        message: "주문 정보가 없습니다."
+      });
+    }
 
     res.status(200).send("주문이 취소되었습니다!");
   } catch(err) {
@@ -89,6 +110,11 @@ const adminDeleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
     await OrderService.deletedOrder(orderId);
+    if (!orderInfo) {
+      res.status(400).json({
+        message: "주문 정보가 없습니다."
+      });
+    }
 
     res.status(200).send("주문이 취소되었습니다!");
   } catch(err) {
@@ -99,6 +125,7 @@ const adminDeleteOrder = async(req, res, next) => {
 const orderController = {
   getOrder,
   adminGetOrder,
+  nonMemberGetOrder,
   createOrder,
   updateOrder,
   adminUpdateOrder,

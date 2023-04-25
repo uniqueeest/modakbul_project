@@ -28,7 +28,23 @@ const adminFindOrder = async() => {
     throw err;
   }
   
-}
+};
+
+const nonMemberFindOrder = async(orderNumber) => {
+
+  try {
+    const getUserOrders = await Order.findOne({orderNumber})
+
+    if (!getUserOrders || getUserOrders.length === 0) {
+      throw new Error("주문 내역이 없습니다.");
+    }
+
+    return getUserOrders;
+  } catch(err) {
+    throw err;
+  }
+  
+};
 
 //새로운 주문 추가
 const addOrder = async(orderInfo) => {
@@ -102,7 +118,7 @@ const addOrder = async(orderInfo) => {
   } catch(err) {
     throw new Error(`주문이 실패하였습니다. ${err}`);
   }
-}
+};
 
 //주문 수정
 const updateOrder = async(orderId, orderInfo) => {
@@ -118,7 +134,7 @@ const updateOrder = async(orderId, orderInfo) => {
     throw err;
   }
 
-}
+};
 
 //주문 취소
 const deletedOrder = async(orderId) => {
@@ -127,12 +143,13 @@ const deletedOrder = async(orderId) => {
   } catch(err) {
     throw err;
   }
-}
+};
 
 
 const OrderService = {
   findOrder, 
   adminFindOrder, 
+  nonMemberFindOrder,
   addOrder, 
   updateOrder, 
   deletedOrder,
