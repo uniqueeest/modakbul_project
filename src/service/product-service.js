@@ -7,7 +7,7 @@ const { Category } = require('../db/models/category-model');
 const addProduct = async (productInfo, imagePath) => {
   try{
     const {name, price, category, description, summary, company, stock} = productInfo;
-    const categoryName = await Category.findOne({_id: category});
+    const categoryName = await Category.findOne({name: category});
     console.log(categoryName);
     // 상품 이름 중복 체크 
     const nameDuplicate = await Product.findOne({ name });
@@ -43,9 +43,24 @@ const addProduct = async (productInfo, imagePath) => {
 const findAll = async () => {
     try {
         
-        const products = await Product.find({}).populate('category', 'name');
+        const products = await Product.find({}).populate('category');
         
-        return products;
+        let data;
+
+        data = products.map((product) => {
+          return {
+            name: product.name,
+            price: product.price,
+            category: product.category.name,
+            description: product.description,
+            summary: product.summary,
+            company: product.company,
+            stock: product.stock,
+            imgPath: product.imgPath,
+          };
+        
+        })
+        return data;
     }
     catch (err) {
         throw new Error(`상품 조회에 실패했습니다. ${err.message}`);
@@ -56,13 +71,27 @@ const findAll = async () => {
 const findProductByName = async (name) => {
     try {
         
-        const product = await Product.findOne({name}).populate('category', 'name');
+        const product = await Product.findOne({name}).populate('category');
 
         if(!product) {
             throw new Error(`존재하지 않는 상품입니다.`);
         }
+        
+          const data = {
+            name: product.name,
+            price: product.price,
+            category: product.category.name,
+            description: product.description,
+            summary: product.summary,
+            company: product.company,
+            stock: product.stock,
+            imgPath: product.imgPath,
+          };
+        
+        
 
-        return product;
+        return data;
+
     } catch (err) {
         throw new Error(`상품 조회 실패: ${err.message}`);
     }
