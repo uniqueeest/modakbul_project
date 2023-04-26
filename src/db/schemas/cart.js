@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 //장바구니 페이지에 보여질 상품에 대한 스키마 정리입니다.
 const CartSchema = new Schema({
     //현재 구현 단계이므로 required 되지 않은 상태입니다.
-    imgURL: {
+    imgPath: {
         type: String,
         required: false,
     },
