@@ -4,14 +4,20 @@ const orderController = require("../controller/order-controller");
 const authMiddleware = require("../middlewares/login-required");
 const adminMiddleware = require("../middlewares/admin-required");
 
-//주문 정보 조회
-orderRouter.get("/:userId", authMiddleware, orderController.getOrder);
-
 //관리자) 주문 정보 조회
-orderRouter.get("/", authMiddleware, adminMiddleware, orderController.adminGetOrder);
+orderRouter.get("/admin", authMiddleware, adminMiddleware, orderController.adminGetOrder);
+
+//비회원 주문 정보 조회
+orderRouter.get("/:orderNumber", orderController.nonMemberGetOrder);
+
+//주문 정보 조회
+orderRouter.get("/order/:userId", authMiddleware, orderController.getOrder);
 
 //새로운 주문 추가
 orderRouter.post("/", authMiddleware, orderController.createOrder);
+
+//비회원 새로운 주문 추가
+orderRouter.post("/nonmember", orderController.createNonMemberOrder);
 
 //주문 수정
 orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);

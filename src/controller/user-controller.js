@@ -1,36 +1,29 @@
 const userService = require("../service/user-service");
+const {User} = require("../db/models/user-model");
+const utils = require("../misc/utils");
 
-const signUp = async (req, res) => {
+const signUp = async (req, res, next) => {
   const userInfo = req.body;
   
   try {
-    await userService.userSignUp(userInfo);
-    res.status(201).send("회원가입이 완료되었습니다.");
+    const userData = await userService.userSignUp(userInfo);
+    res.status(201).json(utils.buildResponse(userData));
   } catch(err) {
-    console.log(err);
-    res.status(500).send(`${err}`);
+    res.status(500);
+    next(err);
   }
 };
 
-const userLogin = async (req, res) => {
+const userLogin = async (req, res, next) => {
   const loginInfo = req.body;
 
   try {
     const token = await userService.userLogin(loginInfo);
-    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 1시간
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-      secure: true,
-    });
-    res.status(200).json({
-      loginSuccess: true,
-      Token: token, // 개발 test 용 임시 토큰
-    });
+
+    res.status(200).json(utils.buildResponse(token));
   } catch(err) {
-    console.log(err);
-    res.status(400).send(`${err}`);
+    res.status(400);
+    next(err);
   }
 };
 
@@ -39,30 +32,35 @@ const adminLogin = async (req, res) => {
 
   try {
     const token = await userService.userLogin(loginInfo);
-    // 토큰이 쿠키에 담김. 이 쿠키를 사용해서 인증이 필요한 요청을 서버에 전송할 수 있음. 쿠키의 만료시간은 1시간
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-      secure: true,
-    });
-    res.status(200).json({
-      loginSuccess: true,
-      Token: token, // 개발 test 용 임시 토큰
-    });
+    const admin = await User.findOne({email: req.body.email});
+
+    if (admin.role !== "admin") {
+      return res.status(400).json({
+        message: "권한이 없습니다.",
+      });
+    }
+
+    const adminData = {token, role: admin.role}
+    res.status(200).json(utils.buildResponse(adminData));
   } catch(err) {
     console.log(err);
     res.status(400).send(`${err}`);
   }
 };
 
+// 토큰을 decoding해서 유저 정보 반환
+const returnUserData = async (req, res) => {
+  const userId = req.user.id;
+  res.status(200).json(utils.buildResponse(userId));
+};
+
 const getUser = async (req, res, next) => {
   try {
     const {userId} = req.params;
 
-    const userInfo = await userService.checkUserData(userId);
+    const userData = await userService.checkUserData(userId);
 
-    res.status(200).json(userInfo);
+    res.status(200).json(utils.buildResponse(userData));
   } catch(err) {
     next(err);
   }
@@ -82,15 +80,13 @@ const createUser = async (req, res, next) => {
     }
 
     // 새 정보와 함께 updateUser 함수 호출
-    await userService.updateUser(userId, req.body.currentPassword, {
+    const userData = await userService.updateUser(userId, req.body.currentPassword, {
       password,
       phoneNumber,
       address,
     });
 
-    return res.status(200).json({
-      message: "사용자 정보가 수정되었습니다.",
-    });
+    return res.status(200).json(utils.buildResponse(userData));
   } catch (error) {
     next(error);
   }
@@ -99,9 +95,9 @@ const createUser = async (req, res, next) => {
 const deleteUser = async(req, res, next) => {
   try{
     const {userId} = req.params;
-    await userService.deleteUser(userId);
+    const userData = await userService.deleteUser(userId);
 
-    res.status(200).send("회원탈퇴가 완료되었습니다!");
+    res.status(200).json(utils.buildResponse(userData));
   } catch(err) {
     next(err);
   }
@@ -112,6 +108,7 @@ const userController = {
   signUp,
   userLogin,
   adminLogin,
+  returnUserData,
   getUser,
   createUser,
   deleteUser

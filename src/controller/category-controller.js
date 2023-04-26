@@ -1,14 +1,12 @@
 const CategoryService = require('../service/category-service');
+const utils = require('../misc/utils');
 
 const createCategory = async (req, res) => {
     const categoryInfo = req.body;
     try {
         const category = await CategoryService.addCategory(categoryInfo);
 
-        res.status(200).json({
-            message: '카테고리 추가 성공!',
-            categories: category
-          });
+        res.status(200).json(utils.buildResponse(category));
     } catch (err) {
         console.log(err);
         res.status(400).send(`${err}`);
@@ -18,67 +16,41 @@ const createCategory = async (req, res) => {
 const getAllCategory = async (req, res) => {
     try {
         const categories = await CategoryService.findAll();
-        res.status(200).json({
-            message: `모든 카테고리 조회 성공!`,
-            categories: categories
-        });
+        res.status(200).json(utils.buildResponse(categories));
     } catch (err) {
         console.log(err);
         res.status(400).send(`${err}`);
     }
 };
 
-const findMajorCategory = async (req, res) => {
-    const {major} = req.params;
+const findCategoryName = async (req, res) => {
+    const {name} = req.params;
     try {
-        const category = await CategoryService.findMajorCategory(major);
-        res.status(200).json({
-            message: `major 카테고리 조회 성공!`,
-            categories: category
-        });
+        const category = await CategoryService.findCategory(name);
+        res.status(200).json(utils.buildResponse(category));
     } catch (err) {
         console.log(err);
         res.status(400).send(`${err}`);
     }
 };
 
-const deleteMajorCategory = async (req, res) => {
-    const {major} = req.params;
+const deleteCategory = async (req, res) => {
+    const {name} = req.params;
     try {
-        const deleteCategory = await CategoryService.deleteMajorCategory(major);
-        res.status(200).json({
-            message: `카테고리 삭제 성공!`,
-            categories: deleteCategory
-        });
+        const deleteCategory = await CategoryService.deleteCategory(name);
+        res.status(200).json(utils.buildResponse(deleteCategory));
     } catch (err) {
         console.log(err);
         res.status(500).send(`${err}`);
     }
 };
 
-const deleteMinorCategory = async (req, res) => {
-    const { major, minor } = req.params;
+const updateCategory = async (req, res) => {
     try {
-      const deletedCategory = await CategoryService.deleteMinorCategory(major, minor);
-      res.status(200).json({
-        message: `카테고리 삭제 성공!`,
-        category: deletedCategory
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send(`${err}`);
-    }
-  };
-
-const updateMajorCategory = async (req, res) => {
-    try {
-      const {major} = req.params;
-      const {newMajor} = req.body;
-      const updatedCategory = await CategoryService.updateMajorName(major, newMajor);
-      res.status(200).json({
-        message: `major 카테고리 수정 성공!`,
-        categories: updatedCategory
-    });
+      const {name} = req.params;
+      const newName = req.body;
+      const updatedCategory = await CategoryService.updateCategoryName(name, newName);
+      res.status(200).json(utils.buildResponse(updatedCategory));
     } catch (err) {
       console.log(err);
       res.status(500).send(`${err}`);
@@ -88,10 +60,9 @@ const updateMajorCategory = async (req, res) => {
 const categoryController = {
     createCategory,
     getAllCategory,
-    findMajorCategory,
-    updateMajorCategory,
-    deleteMajorCategory,
-    deleteMinorCategory
+    findCategoryName,
+    updateCategory,
+    deleteCategory,
 }
 
 
