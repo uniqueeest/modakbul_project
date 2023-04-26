@@ -95,6 +95,7 @@ const adminUpdateOrder = async(req, res, next) => {
         message: "변경할 주문이 입력되지 않았습니다."
       });
     }
+    console.log(orderInfo);
     const orderData = await OrderService.updateOrder(orderId, orderInfo);
     res.status(200).json(utils.buildResponse(orderData));
   } catch(err) {
