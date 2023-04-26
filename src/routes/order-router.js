@@ -19,11 +19,11 @@ orderRouter.post("/", authMiddleware, orderController.createOrder);
 //비회원 새로운 주문 추가
 orderRouter.post("/nonmember", orderController.createNonMemberOrder);
 
-//주문 수정
-orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);
-
 //관리자) 주문 수정
 orderRouter.patch("/admin/:orderId", authMiddleware, adminMiddleware, orderController.adminUpdateOrder);
+
+//주문 수정
+orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);
 
 //주문 취소
 orderRouter.delete("/:orderId", authMiddleware, orderController.deleteOrder);

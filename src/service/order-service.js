@@ -1,5 +1,5 @@
-const {Order} = require("../db/models/order-model");
 const {User} = require("../db/models/user-model");
+const {Order} = require("../db/models/order-model");
 
 //주문 내역 확인
 const findOrder = async(userId) => {
@@ -156,13 +156,13 @@ const nonMemberAddOrder = async(orderInfo) => {
 //주문 수정
 const updateOrder = async(orderId, orderInfo) => {
   try {
-    const user = await Order.findById({_id: orderId});
+    const order = await Order.findOne({_id: orderId});
 
-    if (!user) {
+    if (!order) {
       throw new Error("주문 정보가 없습니다.");
     }
 
-    return await Order.updateOne({orderId}, orderInfo);
+    return await Order.updateOne({_id: orderId}, orderInfo);
   } catch(err) {
     throw err;
   }
