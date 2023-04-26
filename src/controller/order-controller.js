@@ -1,4 +1,5 @@
 const OrderService = require("../service/order-service");
+const utils = require("../misc/utils");
 
 const getOrder = async(req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const getOrder = async(req, res, next) => {
       });
     }
 
-    res.status(200).send(orderInfo);
+    res.status(200).json(utils.buildResponse(orderInfo));
   } catch(err){
     next(err);
   }
@@ -25,7 +26,7 @@ const adminGetOrder = async(req, res, next) => {
       });
     }
 
-    res.status(200).send(orderInfo);
+    res.status(200).json(utils.buildResponse(orderInfo));
   } catch(err) {
     next(err);
   }
@@ -41,7 +42,7 @@ const nonMemberGetOrder = async(req, res, next) => {
       });
     }
 
-    res.status(200).send(orderInfo);
+    res.status(200).json(utils.buildResponse(orderInfo));
   } catch(err) {
     next(err);
   }
@@ -50,9 +51,20 @@ const nonMemberGetOrder = async(req, res, next) => {
 const createOrder = async(req, res, next) => {
   try {
     const orderInfo = req.body;
-    await OrderService.addOrder(orderInfo);
+    const orderData = await OrderService.addOrder(orderInfo);
 
-    res.status(200).send("주문이 완료되었습니다.");
+    res.status(200).json(utils.buildResponse(orderData));
+  } catch(err) {
+    next(err);
+  }
+};
+
+const createNonMemberOrder = async(req, res, next) => {
+  try {
+    const orderInfo = req.body;
+    const orderData = await OrderService.nonMemberAddOrder(orderInfo);
+
+    res.status(200).json(utils.buildResponse(orderData));
   } catch(err) {
     next(err);
   }
@@ -67,8 +79,8 @@ const updateOrder = async(req, res, next) => {
         message: "변경할 주문이 입력되지 않았습니다."
       });
     }
-    OrderService.updateOrder(orderId, orderInfo);
-    res.status(200).send("주문이 정상적으로 변경되었습니다.");
+    const OrderData = await OrderService.updateOrder(orderId, orderInfo);
+    res.status(200).json(utils.buildResponse(OrderData));
   } catch(err) {
     next(err);
   }
@@ -83,8 +95,8 @@ const adminUpdateOrder = async(req, res, next) => {
         message: "변경할 주문이 입력되지 않았습니다."
       });
     }
-    OrderService.adminUpdateOrder(orderId, orderInfo);
-    res.status(200).send("주문이 정상적으로 변경되었습니다.");
+    const orderData = await OrderService.updateOrder(orderId, orderInfo);
+    res.status(200).json(utils.buildResponse(orderData));
   } catch(err) {
     next(err);
   }
@@ -93,14 +105,14 @@ const adminUpdateOrder = async(req, res, next) => {
 const deleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
-    await OrderService.deletedOrder(orderId);
+    const orderData = await OrderService.deletedOrder(orderId);
     if (!orderInfo) {
       res.status(400).json({
         message: "주문 정보가 없습니다."
       });
     }
 
-    res.status(200).send("주문이 취소되었습니다!");
+    res.status(200).json(utils.buildResponse(orderData));
   } catch(err) {
     next(err);
   }
@@ -109,14 +121,14 @@ const deleteOrder = async(req, res, next) => {
 const adminDeleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
-    await OrderService.deletedOrder(orderId);
+    const orderData = await OrderService.deletedOrder(orderId);
     if (!orderInfo) {
       res.status(400).json({
         message: "주문 정보가 없습니다."
       });
     }
 
-    res.status(200).send("주문이 취소되었습니다!");
+    res.status(200).json(utils.buildResponse(orderData));
   } catch(err) {
     next(err);
   }
@@ -127,6 +139,7 @@ const orderController = {
   adminGetOrder,
   nonMemberGetOrder,
   createOrder,
+  createNonMemberOrder,
   updateOrder,
   adminUpdateOrder,
   deleteOrder,

@@ -1,4 +1,5 @@
 const ProductService = require('../service/product-service');
+const { Product } = require("../db/models/product-model");
 
 const createProduct = async(req, res, next) => {
   try {
@@ -46,24 +47,38 @@ const findOneProduct = async(req, res) => {
 const updateProduct = async (req, res) => {
   const { productId } = req.params;
   const productInfo = req.body;
+  const product = await Product.findOne({_id: productId});
+  let imagePath = req.file && req.file.path; // req.file이 존재하면 req.file.path, 아니면 undefined
 
   try {
-    const updatedProduct = await ProductService.updateProduct(productId, productInfo);
+    if (!imagePath) {
+      const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath = product.imgPath || '');
 
-    if (!updatedProduct) {
-      return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
+      if (!updatedProduct) {
+        return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
+      }
+
+      res.status(200).json({
+        message: '상품 수정 성공!',
+        product: updatedProduct
+      });
+    } else {
+      const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath);
+
+      if (!updatedProduct) {
+        return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
+      }
+
+      res.status(200).json({
+        message: '상품 수정 성공!',
+        product: updatedProduct
+      });
     }
-
-    res.status(200).json({
-      message: '상품 수정 성공!',
-      product: updatedProduct
-    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: '서버 에러' });
   }
 };
-
 
 const deleteProduct = async (req, res) => {
     const name = req.params.name;

@@ -31,8 +31,6 @@ const userSignUp = async (userInfo) => {
 
     //사용자 정보 저장
     const savedUser = newUser.save();
-
-    return savedUser;
     
   } catch(err) {
     throw new Error(err);
@@ -150,7 +148,7 @@ const updateUser = async (userId, currentPassword, newInfo) => {
     }
 
     // 유저 정보 업데이트
-    await User.updateOne({ userId }, updateData);
+    return await User.updateOne({_id: userId}, updateData);
   } catch (err) {
     throw err;
   }
@@ -159,7 +157,7 @@ const updateUser = async (userId, currentPassword, newInfo) => {
 //유저 데이터 삭제
 const deleteUser = async (userId) => {
   try {
-    await User.deleteOne({_id: userId});
+    return await User.deleteOne({_id: userId});
   } catch(err) {
     throw err;
   }

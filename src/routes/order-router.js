@@ -13,9 +13,11 @@ orderRouter.get("/:orderNumber", orderController.nonMemberGetOrder);
 //주문 정보 조회
 orderRouter.get("/order/:userId", authMiddleware, orderController.getOrder);
 
-
 //새로운 주문 추가
 orderRouter.post("/", authMiddleware, orderController.createOrder);
+
+//비회원 새로운 주문 추가
+orderRouter.post("/nonmember", orderController.createNonMemberOrder);
 
 //주문 수정
 orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);
