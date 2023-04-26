@@ -8,7 +8,7 @@ const addProduct = async (productInfo, imagePath) => {
   try{
     const {name, price, category, description, summary, company, stock} = productInfo;
     const categoryName = await Category.findOne({_id: category});
-
+    console.log(categoryName);
     // 상품 이름 중복 체크 
     const nameDuplicate = await Product.findOne({ name });
 
@@ -20,7 +20,7 @@ const addProduct = async (productInfo, imagePath) => {
     const newProduct = new Product ({
       name,
       price,
-      category: categoryName.name,
+      category: categoryName._id,
       description,
       summary,
       company,
@@ -43,8 +43,8 @@ const addProduct = async (productInfo, imagePath) => {
 const findAll = async () => {
     try {
         
-        const products = await Product.find({});
-
+        const products = await Product.find({}).populate('category', 'name');
+        
         return products;
     }
     catch (err) {
@@ -56,7 +56,7 @@ const findAll = async () => {
 const findProductByName = async (name) => {
     try {
         
-        const product = await Product.findOne({name});
+        const product = await Product.findOne({name}).populate('category', 'name');
 
         if(!product) {
             throw new Error(`존재하지 않는 상품입니다.`);

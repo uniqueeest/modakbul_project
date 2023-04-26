@@ -14,15 +14,15 @@ const ProductSchema = new Schema ({
     type: Number,
     required: true,
   },
-  // category: {
-  //   type: Schema.Types.ObjectId,
-  //   required: true,
-  //   ref: 'Category'
-  // },
   category: {
-    type: String,
-    required: true
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Category'
   },
+  // category: {
+  //   type: String,
+  //   required: true
+  // },
   //설명
   description: { 
     type: String,
