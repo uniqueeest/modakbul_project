@@ -11,8 +11,9 @@ const cartPost = async (req, res) => {
         const newCartData = await cartService.postCart(userIdKey, cartAdd);
         res.status(201).json(utils.buildResponse(newCartData));
     } catch (err) {
-        res.status(400);
-        next(err);
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -23,8 +24,9 @@ const cartGet = async (req, res) => {
         const cartItems = await cartService.presentCart(userIdKey);
         res.status(201).json(utils.buildResponse(cartItems));
     } catch (err) {
-        res.status(400);
-        next(err);
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -37,8 +39,9 @@ const cartDeleteOne = async (req, res) => {
         const deleteOneCartData = await cartService.removeCart(userIdKey, cartId);
         res.status(201).json(utils.buildResponse(deleteOneCartData));
     } catch (err) {
-        res.status(400);
-        next(err);
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -50,8 +53,9 @@ const cartDeleteAll = async (req, res) => {
         const deleteAllCartData = await cartService.removeAllCart(userIdKey);
         res.status(201).json(utils.buildResponse(deleteAllCartData));
     } catch (err) {
-        res.status(400);
-        next(err);
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
