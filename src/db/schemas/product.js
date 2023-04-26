@@ -1,5 +1,4 @@
 const { Schema } = require('mongoose');
-
 // 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
 
 const ProductSchema = new Schema ({
@@ -15,11 +14,15 @@ const ProductSchema = new Schema ({
     type: Number,
     required: true,
   },
-  //카테고리
   category: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
+    ref: 'Category'
   },
+  // category: {
+  //   type: String,
+  //   required: true
+  // },
   //설명
   description: { 
     type: String,
