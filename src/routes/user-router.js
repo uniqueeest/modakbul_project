@@ -12,9 +12,6 @@ userRouter.post("/login", userController.userLogin);
 //관리자 로그인
 userRouter.post("/admin-login", userController.adminLogin);
 
-//로그인 유저 정보 반환
-userRouter.get("/me", authMiddleware, userController.returnUserData);
-
 // 유저 정보 확인
 userRouter.get("/:userId", authMiddleware, userController.getUser);
 
