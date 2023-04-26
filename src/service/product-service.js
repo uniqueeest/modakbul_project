@@ -1,10 +1,7 @@
 const { Product } = require("../db/models/product-model");
-<<<<<<< HEAD
-=======
 const { Category } = require('../db/models/category-model');
 
 
->>>>>>> feature/product
 
 // 상품 추가
 const addProduct = async (productInfo, imagePath) => {

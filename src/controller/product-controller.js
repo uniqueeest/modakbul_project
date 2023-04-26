@@ -44,11 +44,7 @@ const updateProduct = async (req, res) => {
   const productInfo = req.body;
   const product = await Product.findOne({_id: productId});
   let imagePath = req.file && req.file.path; // req.file이 존재하면 req.file.path, 아니면 undefined
-<<<<<<< HEAD
-
-=======
   
->>>>>>> feature/product
   try {
     if (!imagePath) {
       const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath = product.imgPath || '');
@@ -57,14 +53,7 @@ const updateProduct = async (req, res) => {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
       }
 
-<<<<<<< HEAD
-      res.status(200).json({
-        message: '상품 수정 성공!',
-        product: updatedProduct
-      });
-=======
       res.status(200).json(utils.buildResponse(updatedProduct));
->>>>>>> feature/product
     } else {
       const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath);
 
@@ -72,14 +61,7 @@ const updateProduct = async (req, res) => {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
       }
 
-<<<<<<< HEAD
-      res.status(200).json({
-        message: '상품 수정 성공!',
-        product: updatedProduct
-      });
-=======
       res.status(200).json(utils.buildResponse(updatedProduct));
->>>>>>> feature/product
     }
   } catch (err) {
     console.log(err);
@@ -87,12 +69,9 @@ const updateProduct = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> feature/product
 const deleteProduct = async (req, res) => {
     const name = req.params.name;
   
