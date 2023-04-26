@@ -49,7 +49,7 @@ const updateProduct = async (req, res) => {
   const productInfo = req.body;
   const product = await Product.findOne({_id: productId});
   let imagePath = req.file && req.file.path; // req.file이 존재하면 req.file.path, 아니면 undefined
-  
+
   try {
     if (!imagePath) {
       const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath = product.imgPath || '');
@@ -79,8 +79,6 @@ const updateProduct = async (req, res) => {
     res.status(500).json({ message: '서버 에러' });
   }
 };
-
-
 
 const deleteProduct = async (req, res) => {
     const name = req.params.name;
