@@ -4,7 +4,7 @@ const {User} = require("../db/models/user-model");
 //주문 내역 확인
 const findOrder = async(userId) => {
 
-  const getUserOrders = await Order.find({customerId: userId}).populate("customerId");
+  const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "fullName").populate("cart");
 
   if (!getUserOrders || getUserOrders.length === 0) {
     throw new Error("주문 내역이 없습니다.");
