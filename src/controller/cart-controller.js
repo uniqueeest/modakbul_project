@@ -1,4 +1,5 @@
 const cartService = require('../service/cart-service');
+const utils = require("../misc/utils");
 
 
 //장바구니 추가 컨트롤러
@@ -7,10 +8,12 @@ const cartPost = async (req, res) => {
         const userIdKey = req.user.id;
         const cartAdd = req.body;
 
-        await cartService.postCart(userIdKey, cartAdd);
-        res.status(200).json({ messeage: `장바구니에 등록되었습니다.` });
+        const newCartData = await cartService.postCart(userIdKey, cartAdd);
+        res.status(201).json(utils.buildResponse(newCartData));
     } catch (err) {
-        res.status(400).json({ message: `${err}` });
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -19,9 +22,11 @@ const cartGet = async (req, res) => {
     try{
         const userIdKey = req.user.id;
         const cartItems = await cartService.presentCart(userIdKey);
-        res.status(200).json(cartItems);
+        res.status(201).json(utils.buildResponse(cartItems));
     } catch (err) {
-        res.status(400).json({ message: `${err}` });
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -31,10 +36,12 @@ const cartDeleteOne = async (req, res) => {
         const userIdKey = req.user.id;
         const cartId = req.params;
 
-        await cartService.removeCart(userIdKey, cartId);
-        res.status(200).json({ message: '장바구니 삭제에 성공했습니다.' });
+        const deleteOneCartData = await cartService.removeCart(userIdKey, cartId);
+        res.status(201).json(utils.buildResponse(deleteOneCartData));
     } catch (err) {
-        res.status(400).json({ message: `${err}` });
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
@@ -43,10 +50,12 @@ const cartDeleteAll = async (req, res) => {
     try {
         const userIdKey = req.user.id;
 
-        await cartService.removeAllCart(userIdKey);
-        res.status(200).json({ message: '장바구니 전체 삭제에 성공했습니다.' });
+        const deleteAllCartData = await cartService.removeAllCart(userIdKey);
+        res.status(201).json(utils.buildResponse(deleteAllCartData));
     } catch (err) {
-        res.status(400).json({ message: `${err}` });
+        res.status(400).json({
+            message: `${err.message}`
+        });
     };
 }
 
