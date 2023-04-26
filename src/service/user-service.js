@@ -62,10 +62,18 @@ const userLogin = async (loginInfo) => {
     id: user._id,
     email: user.email,
   }, 
-  "jwt-secret",
+  process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
-  return token;
+  const data = {
+    email: user.email,
+    fullName: user.fullName,
+    address: user.address,
+    phoneNumber: user.phoneNumber,
+    token: token,
+  }
+
+  return data;
 };
 
 //관리자 로그인
@@ -93,11 +101,18 @@ const adminLogin = async (loginInfo) => {
     id: admin._id,
     email: admin.email,
   }, 
-  "jwt-secret",
+  process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
+  const data = {
+    email: admin.email,
+    fullName: admin.fullName,
+    address: admin.address,
+    phoneNumber: admin.phoneNumber,
+    token: token,
+  }
 
-  return token;
+  return data;
 };
 
 //유저 정보 확인
