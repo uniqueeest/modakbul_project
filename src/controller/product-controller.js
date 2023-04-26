@@ -1,14 +1,15 @@
 const ProductService = require('../service/product-service');
 const { Product } = require("../db/models/product-model");
+const utils = require('../misc/utils');
 
 const createProduct = async(req, res, next) => {
   try {
     const productInfo = req.body;
     const imagePath = req.file.path;
 
-    await ProductService.addProduct(productInfo, imagePath);
+    const product = await ProductService.addProduct(productInfo, imagePath);
 
-    res.status(200).send("상품이 등록되었습니다.");
+    res.status(200).json(utils.buildResponse(product));
 
   } catch(err) {
     next(err);
@@ -18,10 +19,7 @@ const createProduct = async(req, res, next) => {
 const findAllProduct = async (req, res) => {
     try {
         const products = await ProductService.findAll();
-        res.status(200).json({
-            message: `모든 상품 조회 성공!`,
-            products: products
-        });
+        res.status(200).json(utils.buildResponse(products));
     } catch (err) {
         console.log(err);
         res.status(500).json({message: `서버 에러`});
@@ -34,10 +32,7 @@ const findOneProduct = async(req, res) => {
     try {
         const product = await ProductService.findProductByName(name);
 
-        res.status(200).json({
-            message: `특정 상품 조회 성공!`,
-            product: product
-        });
+        res.status(200).json(utils.buildResponse(product));
     } catch (err) {
         console.log(err);
         res.status(500).json({message: `서버 에러`});
@@ -58,10 +53,7 @@ const updateProduct = async (req, res) => {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
       }
 
-      res.status(200).json({
-        message: '상품 수정 성공!',
-        product: updatedProduct
-      });
+      res.status(200).json(utils.buildResponse(updatedProduct));
     } else {
       const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath);
 
@@ -69,10 +61,7 @@ const updateProduct = async (req, res) => {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
       }
 
-      res.status(200).json({
-        message: '상품 수정 성공!',
-        product: updatedProduct
-      });
+      res.status(200).json(utils.buildResponse(updatedProduct));
     }
   } catch (err) {
     console.log(err);
@@ -89,10 +78,7 @@ const deleteProduct = async (req, res) => {
     try {
       const product = await ProductService.deleteProduct(name);
   
-        res.status(200).json({
-          message: `특정 상품 ${name} 삭제 성공!`,
-          product: product
-        });
+      res.status(200).json(utils.buildResponse(product));
     } catch (err) {
         console.log(err);
         res.status(500).json({message: `서버 에러`});
