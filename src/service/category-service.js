@@ -1,4 +1,4 @@
-const {Category} = require('../db/models/index');
+const {Category} = require('../db/index');
 
 const addCategory = async (categoryInfo) => {
     try {

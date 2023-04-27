@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const CartSchema = require('../schemas/cart');
-const CategorySchema = require('../schemas/category');
-const OrderSchema = require("../schemas/order");
-const ProductSchema = require('../schemas/product');
-const UserSchema = require("../schemas/user");
+const CartSchema = require('./schemas/cart');
+const CategorySchema = require('./schemas/category');
+const OrderSchema = require("./schemas/order");
+const ProductSchema = require('./schemas/product');
+const UserSchema = require("./schemas/user");
 
 exports.Cart = mongoose.model('Cart', CartSchema);
 exports.Category = mongoose.model('Category', CategorySchema);

@@ -1,4 +1,4 @@
-const {User} = require("../db/models/index");
+const {User} = require("../db/index");
 
 //admin 검증 
 const adminMiddleware = async(req, res, next) => {
