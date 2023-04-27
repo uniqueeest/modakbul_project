@@ -72,7 +72,7 @@ const presentCart = async (userIdKey)=> {
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
             _id: item._id,
-            imgURL : item.imgURL,
+            imgPath : item.imgURL,
             name: item.name,
             price: item.price,
             company: item.company,
