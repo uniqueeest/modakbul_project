@@ -11,9 +11,9 @@ const userSignUp = async (userInfo) => {
     const {email, fullName, password, phoneNumber, address} = userInfo;
 
     // 이메일 중복 검사
-    const emailDuplicate = await User.findOne({email}).lean();
+    const duplicatedEmail = await User.findOne({email}).lean();
 
-    if (emailDuplicate) {
+    if (duplicatedEmail) {
       throw new Error("이미 등록된 이메일입니다.");
     }
 
