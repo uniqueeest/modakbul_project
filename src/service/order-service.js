@@ -41,7 +41,7 @@ const nonMemberFindOrder = async(orderNumber) => {
       throw new Error("주문 내역이 없습니다.");
     }
 
-    return getUserOrders;
+    return [getUserOrders];
   } catch(err) {
     throw err;
   }
