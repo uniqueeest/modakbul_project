@@ -142,8 +142,8 @@ const removeAllCart = async (userIdKey)=> {
         //장바구니에서 모든 상품을 삭제합니다.
         await User.findByIdAndUpdate(userIdKey, { $set: { cart: [] } });
         //만약 제대로 삭제되지 않았다면 오류를 출력합니다.
-        const isUsersCartDeleted = await User.findById(userIdKey).populate('cart');
-        /*if(isUsersCartDeleted.cart.length !== 0){
+        /*const isUsersCartDeleted = await User.findById(userIdKey).populate('cart');
+        if(isUsersCartDeleted.cart.length !== 0){
             throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
         };*/
         //참조되고 있던 cart document도 전부 삭제합니다.
