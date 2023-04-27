@@ -25,8 +25,11 @@ orderRouter.patch("/:adminId/:orderId", authMiddleware, adminMiddleware, orderCo
 //주문 수정
 orderRouter.patch("/:orderId", authMiddleware, orderController.updateOrder);
 
+//비회원 주문 수정
+orderRouter.patch("/nonmember/:orderId", orderController.updateOrder);
+
 //주문 취소
-orderRouter.delete("/:orderId", authMiddleware, orderController.deleteOrder);
+orderRouter.delete("/:orderId", orderController.deleteOrder);
 
 //관리자) 주문 취소
 orderRouter.delete("/:adminId/:orderId", authMiddleware, adminMiddleware, orderController.adminDeleteOrder);
