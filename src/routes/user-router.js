@@ -1,6 +1,6 @@
 const {Router} = require("express");
 const userRouter = Router();
-const userController = require("../controller/user-controller");
+const {userController} = require("../controller/index");
 const authMiddleware = require("../middlewares/login-required");
 
 //회원가입

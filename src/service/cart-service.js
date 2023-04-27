@@ -1,5 +1,5 @@
-const { Cart } = require('../db/models/cart-model');
-const { User } = require('../db/models/user-model');
+const {Cart} = require('../db/models/index');
+const {User} = require('../db/models/index');
 const mongoose = require('mongoose');
 
 //장바구니 추가 

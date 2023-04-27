@@ -1,5 +1,5 @@
-const userService = require("../service/user-service");
-const {User} = require("../db/models/user-model");
+const {userService} = require("../service/index");
+const {User} = require("../db/models/index");
 const utils = require("../misc/utils");
 
 const signUp = async (req, res, next) => {
