@@ -1,5 +1,5 @@
-const {Product} = require("../db/models/index");
-const {Category} = require("../db/models/index");
+const {Product} = require("../db/index");
+const {Category} = require("../db/index");
 
 
 
