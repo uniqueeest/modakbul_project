@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("./src/config");
 const cors = require("cors");
+const path = require('path');
 
 const {cartRouter} = require('./src/routes/index');
 const {productRouter} = require("./src/routes/index");
@@ -33,7 +34,7 @@ app.use(express.urlencoded({ extended: true })); //headers 값을 읽으려면 t
 app.use(cors()); 
 
 // 정적 파일 제공
-app.use(express.static("public")); 
+app.use('/static', express.static(path.join(__dirname, "public/images")));
 
 app.get("/", (req, res) => {
   res.send("root page");
