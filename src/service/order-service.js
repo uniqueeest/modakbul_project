@@ -17,7 +17,8 @@ const findOrder = async(userId) => {
 const adminFindOrder = async() => {
 
   try {
-    const getUserOrders = await Order.find({}).populate("customerId");
+    //password 외의 모든 user의 정보를 가져옴
+    const getUserOrders = await Order.find({}).populate("customerId", "-password").populate("cart");
 
     if (!getUserOrders || getUserOrders.length === 0) {
       throw new Error("주문 내역이 없습니다.");
@@ -156,13 +157,13 @@ const nonMemberAddOrder = async(orderInfo) => {
 //주문 수정
 const updateOrder = async(orderId, orderInfo) => {
   try {
-    const order = await Order.findOne({_id: orderId});
+    const order = await Order.findOne({_id: orderId}).lean();
 
     if (!order) {
       throw new Error("주문 정보가 없습니다.");
     }
 
-    return await Order.updateOne({_id: orderId}, orderInfo);
+    return await Order.updateOne({_id: orderId}, orderInfo).lean();
   } catch(err) {
     throw err;
   }
@@ -172,7 +173,7 @@ const updateOrder = async(orderId, orderInfo) => {
 //주문 취소
 const deletedOrder = async(orderId) => {
   try {
-    return await Order.deleteOne({_id:orderId});
+    return await Order.deleteOne({_id:orderId}).lean();
   } catch(err) {
     throw err;
   }
