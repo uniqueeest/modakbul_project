@@ -1,5 +1,6 @@
 const {User} = require("../db/index");
 const {Order} = require("../db/index");
+const {Cart} = require("../db/index");
 
 //주문 내역 확인
 const findOrder = async(userId) => {
@@ -84,7 +85,7 @@ const addOrder = async(orderInfo) => {
       }
 
       return `${year}${month}${day}${randomNum()}`;
-    }
+    };
 
     const newOrder = new Order ({
       customerId: order._id, //user의 ID를 받아옴

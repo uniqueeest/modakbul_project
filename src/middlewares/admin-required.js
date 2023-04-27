@@ -3,7 +3,7 @@ const {User} = require("../db/index");
 //admin 검증 
 const adminMiddleware = async(req, res, next) => {
   try {
-    const {adminId} = req.body;
+    const {adminId} = req.params;
     const admin = await User.findOne({_id: adminId});
 
     //관리자인지 확인
