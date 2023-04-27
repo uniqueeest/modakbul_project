@@ -53,6 +53,8 @@ const addOrder = async(orderInfo) => {
   try {
     const {
       customerId,
+      customerName, 
+      customerEmail,
       customerPhoneNumber, 
       customerAddress, 
       cart, 
@@ -96,6 +98,8 @@ const addOrder = async(orderInfo) => {
 
     const newOrder = new Order ({
       customerId: order._id, //user의 ID를 받아옴
+      customerName, 
+      customerEmail,
       customerPhoneNumber,
       customerAddress,
       cart: arr,
