@@ -10,11 +10,11 @@ const postCart = async (userIdKey, cartAdd)=> {
             throw new Error('먼저 로그인 상태를 확인해 주세요');
         };
         //추가하려는 물품의 이름, 가격, 회사, 구매수량을 추가합니다.
-        const { imgPath, name, price, company, quantity } = cartAdd;
+        const { imgURL, name, price, company, quantity } = cartAdd;
 
         //장바구니에 추가
         const newCart = new Cart ({
-            imgPath,
+            imgURL,
             name,
             price,
             company,
@@ -22,14 +22,14 @@ const postCart = async (userIdKey, cartAdd)=> {
             poster: userIdKey
         });
         //중복 추가 방지를 위해 확인합니다.
-        const duplicateCart = await Cart.findOne({ imgPath, name, price, company, poster: userIdKey });
+        const duplicateCart = await Cart.findOne({ imgURL, name, price, company, poster: userIdKey });
             if(duplicateCart){
                 throw new Error ('이미 장바구니에 추가된 상품입니다.');
             };
         //장바구니에 저장합니다.
         await newCart.save();
         //장바구니에 제대로 저장이 되었는지 확인합니다.
-        const checkCart = await Cart.find({ imgPath, name, price, company, poster: userIdKey });
+        const checkCart = await Cart.find({ imgURL, name, price, company, poster: userIdKey });
             if(checkCart.length === 0){
                 throw new Error ('현재 장바구니에 상품이 추가되지 않습니다.');
             };    
@@ -72,7 +72,7 @@ const presentCart = async (userIdKey)=> {
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
             _id: item._id,
-            imgPath : item.imgPath,
+            imgPath : item.imgURL,
             name: item.name,
             price: item.price,
             company: item.company,
