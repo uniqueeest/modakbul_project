@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const {User} = require("../db/index");
 const {Order} = require("../db/index");
 const {Cart} = require("../db/index");
@@ -87,11 +88,18 @@ const addOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     };
 
+      let arr = [];
+      for (let i=0; i<cart.length; i++) {
+        const cartData = await Cart.findOne({_id: cart[i]});
+        console.log(cartData);
+        arr.push(cartData);    
+      }
+
     const newOrder = new Order ({
       customerId: order._id, //user의 ID를 받아옴
       customerPhoneNumber,
       customerAddress,
-      cart,
+      cart: arr,
       orderStatus,
       total,
       orderNumber: createDateYYMMDD(),
@@ -139,6 +147,7 @@ const nonMemberAddOrder = async(orderInfo) => {
 
       return `${year}${month}${day}${randomNum()}`;
     }
+
     const newOrder = new Order ({
       customerName,
       customerEmail,
