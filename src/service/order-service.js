@@ -148,12 +148,18 @@ const nonMemberAddOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     }
 
+    let arr = [];
+      for (let i=0; i<cart.length; i++) {
+        const cartData = await Cart.findOne({_id: cart[i]});
+        arr.push(cartData);    
+      }
+
     const newOrder = new Order ({
       customerName,
       customerEmail,
       customerPhoneNumber,
       customerAddress,
-      cart,
+      cart: arr,
       orderStatus,
       total,
       orderNumber: createDateYYMMDD(),
