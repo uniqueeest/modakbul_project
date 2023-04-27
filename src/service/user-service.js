@@ -66,6 +66,7 @@ const userLogin = async (loginInfo) => {
   {expiresIn: "1h"} );
 
   const data = {
+    _id: user._id,
     email: user.email,
     fullName: user.fullName,
     address: user.address,
@@ -105,6 +106,7 @@ const adminLogin = async (loginInfo) => {
   {expiresIn: "1h"} );
 
   const data = {
+    _id: admin._id,
     email: admin.email,
     fullName: admin.fullName,
     address: admin.address,
