@@ -7,7 +7,7 @@ const findOrder = async(userId) => {
 
   const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "fullName").populate("cart");
 
-  if (!getUserOrders || getUserOrders.length === 0) {
+  if (!getUserOrders) {
     throw new Error("주문 내역이 없습니다.");
   }
 
@@ -21,7 +21,7 @@ const adminFindOrder = async() => {
     //password 외의 모든 user의 정보를 가져옴
     const getUserOrders = await Order.find({}).populate("customerId", "-password").populate("cart");
 
-    if (!getUserOrders || getUserOrders.length === 0) {
+    if (!getUserOrders) {
       throw new Error("주문 내역이 없습니다.");
     }
 
