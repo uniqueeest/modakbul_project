@@ -107,7 +107,7 @@ const deleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
     const orderData = await orderService.deletedOrder(orderId);
-    if (!orderInfo) {
+    if (!orderData) {
       res.status(400).json({
         message: "주문 정보가 없습니다."
       });
@@ -123,7 +123,7 @@ const adminDeleteOrder = async(req, res, next) => {
   try {
     const {orderId} = req.params;
     const orderData = await orderService.deletedOrder(orderId);
-    if (!orderInfo) {
+    if (!orderData) {
       res.status(400).json({
         message: "주문 정보가 없습니다."
       });
