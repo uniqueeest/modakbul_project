@@ -1,4 +1,4 @@
-const cartService = require('../service/cart-service');
+const {cartService} = require('../service/index');
 const utils = require("../misc/utils");
 
 

@@ -1,5 +1,5 @@
-const {User} = require("../db/models/user-model");
-const {Order} = require("../db/models/order-model");
+const {User} = require("../db/models/index");
+const {Order} = require("../db/models/index");
 
 //주문 내역 확인
 const findOrder = async(userId) => {
