@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const {User} = require("../db/index");
 const {Order} = require("../db/index");
 const {Cart} = require("../db/index");
@@ -36,7 +35,7 @@ const adminFindOrder = async() => {
 const nonMemberFindOrder = async(orderNumber) => {
 
   try {
-    const getUserOrders = await Order.findOne({orderNumber})
+    const getUserOrders = await Order.findOne({orderNumber}).populate("cart");
 
     if (!getUserOrders || getUserOrders.length === 0) {
       throw new Error("주문 내역이 없습니다.");
