@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true })); //headers 값을 읽으려면 t
 app.use(cors()); 
 
 // 정적 파일 제공
-app.use('/static', express.static(path.join(__dirname, "public/images")));
+app.use('/public/images', express.static(path.join(__dirname, "public/images")));
 
 app.get("/", (req, res) => {
   res.send("root page");
