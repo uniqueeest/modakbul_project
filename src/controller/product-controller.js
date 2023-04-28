@@ -1,13 +1,13 @@
-const ProductService = require('../service/product-service');
-const { Product } = require("../db/models/product-model");
+const {productService} = require('../service/index');
+const { Product } = require("../db/index");
 const utils = require('../misc/utils');
 
 const createProduct = async(req, res, next) => {
   try {
     const productInfo = req.body;
-    const imagePath = req.file.path;
+    const imagePath = req.file.path.replace(/\\/g, "/");
 
-    const product = await ProductService.addProduct(productInfo, imagePath);
+    const product = await productService.addProduct(productInfo, imagePath);
 
     res.status(200).json(utils.buildResponse(product));
 
@@ -18,7 +18,7 @@ const createProduct = async(req, res, next) => {
 
 const findAllProduct = async (req, res) => {
     try {
-        const products = await ProductService.findAll();
+        const products = await productService.findAll();
         res.status(200).json(utils.buildResponse(products));
     } catch (err) {
         console.log(err);
@@ -30,7 +30,7 @@ const findOneProduct = async(req, res) => {
     const name = req.params.name;
 
     try {
-        const product = await ProductService.findProductByName(name);
+        const product = await productService.findProductByName(name);
 
         res.status(200).json(utils.buildResponse(product));
     } catch (err) {
@@ -47,7 +47,7 @@ const updateProduct = async (req, res) => {
   
   try {
     if (!imagePath) {
-      const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath = product.imgPath || '');
+      const updatedProduct = await productService.updateProduct(productId, productInfo, imagePath = product.imgPath || '');
 
       if (!updatedProduct) {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
@@ -55,7 +55,7 @@ const updateProduct = async (req, res) => {
 
       res.status(200).json(utils.buildResponse(updatedProduct));
     } else {
-      const updatedProduct = await ProductService.updateProduct(productId, productInfo, imagePath);
+      const updatedProduct = await productService.updateProduct(productId, productInfo, imagePath);
 
       if (!updatedProduct) {
         return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
@@ -76,7 +76,7 @@ const deleteProduct = async (req, res) => {
     const name = req.params.name;
   
     try {
-      const product = await ProductService.deleteProduct(name);
+      const product = await productService.deleteProduct(name);
   
       res.status(200).json(utils.buildResponse(product));
     } catch (err) {

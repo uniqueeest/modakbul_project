@@ -1,5 +1,5 @@
-const userService = require("../service/user-service");
-const {User} = require("../db/models/user-model");
+const {userService} = require("../service/index");
+const {User} = require("../db/index");
 const utils = require("../misc/utils");
 
 const signUp = async (req, res, next) => {
@@ -18,9 +18,9 @@ const userLogin = async (req, res, next) => {
   const loginInfo = req.body;
 
   try {
-    const token = await userService.userLogin(loginInfo);
+    const data = await userService.userLogin(loginInfo);
 
-    res.status(200).json(utils.buildResponse(token));
+    res.status(200).json(utils.buildResponse(data));
   } catch(err) {
     res.status(400);
     next(err);
@@ -31,7 +31,7 @@ const adminLogin = async (req, res) => {
   const loginInfo = req.body;
 
   try {
-    const token = await userService.userLogin(loginInfo);
+    const data = await userService.userLogin(loginInfo);
     const admin = await User.findOne({email: req.body.email});
 
     if (admin.role !== "admin") {
@@ -40,18 +40,12 @@ const adminLogin = async (req, res) => {
       });
     }
 
-    const adminData = {token, role: admin.role}
+    const adminData = {data, role: admin.role}
     res.status(200).json(utils.buildResponse(adminData));
   } catch(err) {
     console.log(err);
     res.status(400).send(`${err}`);
   }
-};
-
-// 토큰을 decoding해서 유저 정보 반환
-const returnUserData = async (req, res) => {
-  const userId = req.user.id;
-  res.status(200).json(utils.buildResponse(userId));
 };
 
 const getUser = async (req, res, next) => {
@@ -108,7 +102,6 @@ const userController = {
   signUp,
   userLogin,
   adminLogin,
-  returnUserData,
   getUser,
   createUser,
   deleteUser

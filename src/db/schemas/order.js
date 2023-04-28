@@ -31,6 +31,7 @@ const OrderSchema = new Schema({
     cart: [{
       type: Schema.Types.ObjectId,
       ref: 'Cart',
+      required: false,
     }],
     total: {
         type: Number,

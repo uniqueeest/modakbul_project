@@ -1,5 +1,5 @@
-const { Product } = require("../db/models/product-model");
-const { Category } = require('../db/models/category-model');
+const {Product} = require("../db/index");
+const {Category} = require("../db/index");
 
 
 
@@ -8,7 +8,7 @@ const addProduct = async (productInfo, imagePath) => {
   try{
     const {name, price, category, description, summary, company, stock} = productInfo;
     const categoryName = await Category.findOne({name: category});
-    console.log(categoryName);
+  
     // 상품 이름 중복 체크 
     const nameDuplicate = await Product.findOne({ name });
 
@@ -27,7 +27,6 @@ const addProduct = async (productInfo, imagePath) => {
       stock,
       imgPath: imagePath,
     });
-    console.log(newProduct);
 
     // 상품 정보 저장
     const savedProduct = await newProduct.save();
@@ -49,6 +48,7 @@ const findAll = async () => {
 
         data = products.map((product) => {
           return {
+            _id: product._id,
             name: product.name,
             price: product.price,
             category: product.category.name,
@@ -78,6 +78,7 @@ const findProductByName = async (name) => {
         }
         
           const data = {
+            _id: product._id,
             name: product.name,
             price: product.price,
             category: product.category.name,
