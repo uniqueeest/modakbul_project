@@ -147,8 +147,8 @@ const removeAllCart = async (userIdKey)=> {
             throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
         };*/
         //참조되고 있던 cart document도 전부 삭제합니다.
-        const cartIds = usersCart.cart.map((item)=> item._id);
-        await Cart.deleteMany({ _id: { $in: cartIds } });
+        /*const cartIds = usersCart.cart.map((item)=> item._id);
+        await Cart.deleteMany({ _id: { $in: cartIds } });*/
         return;
     } catch (err) {
         throw new Error (`${err.message}`);
