@@ -5,9 +5,9 @@ const {Cart} = require("../db/index");
 //주문 내역 확인
 const findOrder = async(userId) => {
 
-  const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "fullName").populate("cart");
+  const getUserOrders = await Order.find({customerId: userId}).populate("customerId", "-password").populate("cart");
 
-  if (!getUserOrders || getUserOrders.length === 0) {
+  if (!getUserOrders) {
     throw new Error("주문 내역이 없습니다.");
   }
 
@@ -21,7 +21,7 @@ const adminFindOrder = async() => {
     //password 외의 모든 user의 정보를 가져옴
     const getUserOrders = await Order.find({}).populate("customerId", "-password").populate("cart");
 
-    if (!getUserOrders || getUserOrders.length === 0) {
+    if (!getUserOrders) {
       throw new Error("주문 내역이 없습니다.");
     }
 
@@ -41,7 +41,7 @@ const nonMemberFindOrder = async(orderNumber) => {
       throw new Error("주문 내역이 없습니다.");
     }
 
-    return getUserOrders;
+    return [getUserOrders];
   } catch(err) {
     throw err;
   }
@@ -53,6 +53,8 @@ const addOrder = async(orderInfo) => {
   try {
     const {
       customerId,
+      customerName, 
+      customerEmail,
       customerPhoneNumber, 
       customerAddress, 
       cart, 
@@ -90,12 +92,13 @@ const addOrder = async(orderInfo) => {
       let arr = [];
       for (let i=0; i<cart.length; i++) {
         const cartData = await Cart.findOne({_id: cart[i]});
-        console.log(cartData);
         arr.push(cartData);    
       }
 
     const newOrder = new Order ({
       customerId: order._id, //user의 ID를 받아옴
+      customerName, 
+      customerEmail,
       customerPhoneNumber,
       customerAddress,
       cart: arr,
@@ -116,13 +119,12 @@ const nonMemberAddOrder = async(orderInfo) => {
       customerEmail, 
       customerPhoneNumber, 
       customerAddress, 
-      cart, 
       orderStatus, 
       total
     } = orderInfo;
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
-    if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
+    if (!customerPhoneNumber|| !customerAddress || !total) {
       throw new Error("정보를 모두 입력해주세요.");
     }
 
@@ -147,18 +149,11 @@ const nonMemberAddOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     }
 
-    let arr = [];
-      for (let i=0; i<cart.length; i++) {
-        const cartData = await Cart.findOne({_id: cart[i]});
-        arr.push(cartData);    
-      }
-
     const newOrder = new Order ({
       customerName,
       customerEmail,
       customerPhoneNumber,
       customerAddress,
-      cart: arr,
       orderStatus,
       total,
       orderNumber: createDateYYMMDD(),

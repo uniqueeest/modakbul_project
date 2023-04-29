@@ -5,7 +5,7 @@ const utils = require('../misc/utils');
 const createProduct = async(req, res, next) => {
   try {
     const productInfo = req.body;
-    const imagePath = req.file.path;
+    const imagePath = req.file.path.replace(/\\/g, "/");
 
     const product = await productService.addProduct(productInfo, imagePath);
 
