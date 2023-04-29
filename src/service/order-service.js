@@ -92,7 +92,6 @@ const addOrder = async(orderInfo) => {
       let arr = [];
       for (let i=0; i<cart.length; i++) {
         const cartData = await Cart.findOne({_id: cart[i]});
-        console.log(cartData);
         arr.push(cartData);    
       }
 
@@ -120,7 +119,6 @@ const nonMemberAddOrder = async(orderInfo) => {
       customerEmail, 
       customerPhoneNumber, 
       customerAddress, 
-      cart, 
       orderStatus, 
       total
     } = orderInfo;
@@ -151,18 +149,11 @@ const nonMemberAddOrder = async(orderInfo) => {
       return `${year}${month}${day}${randomNum()}`;
     }
 
-    let arr = [];
-      for (let i=0; i<cart.length; i++) {
-        const cartData = await Cart.findOne({_id: cart[i]});
-        arr.push(cartData);    
-      }
-
     const newOrder = new Order ({
       customerName,
       customerEmail,
       customerPhoneNumber,
       customerAddress,
-      cart: arr,
       orderStatus,
       total,
       orderNumber: createDateYYMMDD(),
