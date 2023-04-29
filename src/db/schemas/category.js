@@ -1,18 +1,13 @@
 const { Schema } = require('mongoose');
 
-// 순서대로 대분류 소분류
+// 카테고리
 
 const CategorySchema = new Schema ({
-    major: {
+    name: {
         type: String,
         required: true,
         // unique: true,
-    },
-    minor: {
-        type: [String],
-        required: true
-    },
-    
+    }
 },
 {
     collection: 'categories', // 몽고db의 categories라는 컬렉션에 이 스키마 저장

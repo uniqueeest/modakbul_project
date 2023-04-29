@@ -1,95 +1,66 @@
-const { Product } = require("../db/models/product-model");
+const {Product} = require("../db/index");
+const {Category} = require("../db/index");
 
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
-// const upload = require('../routes/product-router');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/images');
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const filename = uuidv4() + ext;
-    cb(null, filename);
-  },
-});
-
-const upload = multer({
-    storage: storage,
-    limits: {fileSize: 20 * 1024 * 1024,},
-    fileFilter: function (req, file, cb) {
-      if (
-        file.mimetype !== 'image/png' &&
-        file.mimetype !== 'image/jpg' &&
-        file.mimetype !== 'image/jpeg'
-      ) {
-        return cb(new Error('Only image files are allowed!'), false);
-      }
-      cb(null, true);
-    },
-  }); 
 
 // 상품 추가
-const addProduct = async (productInfo) => {
-  try {
-    // productInfo로 가져온 정보들을 구조 분해 할당
-    const {
-      name,
-      price,
-      category,
-      description,
-      summary,
-      company,
-      stock,
-    } = productInfo;
-
-    // 상품 이름 중복 체크
+const addProduct = async (productInfo, imagePath) => {
+  try{
+    const {name, price, category, description, summary, company, stock} = productInfo;
+    const categoryName = await Category.findOne({name: category});
+  
+    // 상품 이름 중복 체크 
     const nameDuplicate = await Product.findOne({ name });
 
     if (nameDuplicate) {
-      throw new Error('이미 등록된 상품입니다.');
+      throw new Error("이미 등록된 상품입니다.");
     }
 
-    // 이미지 파일을 업로드합니다.
-    await upload.single('img')(productInfo.req, productInfo.res);
-    
-    // 이미지 파일의 경로를 생성합니다.
-    const imagePath = path.join(
-      'public/images',
-      productInfo.req.file.filename
-    );
-
-    // 제품 생성
-    const newProduct = new Product({
+    // 상품 정보 생성
+    const newProduct = new Product ({
       name,
       price,
-      category,
+      category: categoryName._id,
       description,
       summary,
       company,
       stock,
-      img: imagePath,
+      imgPath: imagePath,
     });
 
     // 상품 정보 저장
     const savedProduct = await newProduct.save();
-
+    
     return savedProduct;
-  } catch (err) {
-    throw new Error(`상품 등록에 실패했습니다. ${err}`);
+  } catch(err) {
+    throw err;
   }
 };
+
 
 // 모든 상품 정보 조회
 const findAll = async () => {
     try {
         
-        const products = await Product.find({});
+        const products = await Product.find({}).populate('category');
+        
+        let data;
 
-        return products;
+        data = products.map((product) => {
+          return {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            category: product.category.name,
+            description: product.description,
+            summary: product.summary,
+            company: product.company,
+            stock: product.stock,
+            imgPath: product.imgPath,
+          };
+        
+        })
+        return data;
     }
     catch (err) {
         throw new Error(`상품 조회에 실패했습니다. ${err.message}`);
@@ -100,13 +71,28 @@ const findAll = async () => {
 const findProductByName = async (name) => {
     try {
         
-        const product = await Product.findOne({name});
+        const product = await Product.findOne({name}).populate('category');
 
         if(!product) {
             throw new Error(`존재하지 않는 상품입니다.`);
         }
+        
+          const data = {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            category: product.category.name,
+            description: product.description,
+            summary: product.summary,
+            company: product.company,
+            stock: product.stock,
+            imgPath: product.imgPath,
+          };
+        
+        
 
-        return product;
+        return data;
+
     } catch (err) {
         throw new Error(`상품 조회 실패: ${err.message}`);
     }
@@ -115,15 +101,26 @@ const findProductByName = async (name) => {
 // 특정 상품정보 수정
 // productId = db에서 제공하는 ObjectId 
 // 몽고db에서 제공하는 findByIdAndUpdate 메서드를 사용, 첫번째 인자 = ObjectId, 
-const updateProduct = async (productId, productInfo) => {
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(productId, productInfo, {new: true});
+const updateProduct = async (productId, productInfo, imagePath) => {
+  try {
+      const product = await Product.findOne({_id: productId});
 
-        return updatedProduct;
-    } catch (err) {
-        throw new Error(`상품 수정 실패: ${err.message}`);
-    }
-}
+      if (!product) {
+        throw new Error("상품 정보가 없습니다.");
+      }
+  
+
+      if (imagePath) {
+        return await Product
+        .updateOne({_id: productId}, productInfo)
+        .updateOne({_id: productId}, {imgPath: imagePath});
+      }
+
+      return await Product.updateOne({_id: productId}, productInfo, imagePath);
+  } catch (err) {
+      throw new Error(`상품 수정 실패: ${err.message}`);
+  }
+};
 
 //특정 상품정보 삭제
 const deleteProduct = async (name) => {
@@ -142,4 +139,4 @@ const deleteProduct = async (name) => {
     }
 }
 
-module.exports = {addProduct, findAll, updateProduct, findProductByName, deleteProduct, upload};
+module.exports = {addProduct, findAll, updateProduct, findProductByName, deleteProduct};

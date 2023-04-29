@@ -1,5 +1,5 @@
-const { Cart } = require('../db/models/cart-model');
-const { User } = require('../db/models/user-model');
+const {Cart} = require('../db/index');
+const {User} = require('../db/index');
 const mongoose = require('mongoose');
 
 //장바구니 추가 
@@ -65,9 +65,9 @@ const presentCart = async (userIdKey)=> {
         //해당 유저의 모든 장바구니 물품들의 내역을 표시합니다.
         const cartItems = await User.findById(userIdKey).populate('cart');
         //장바구니에 상품이 없다면 오류를 출력합니다.
-        if (cartItems.cart.length === 0){
+        /*if (cartItems.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
-        };
+        };*/
         //장바구니에 담긴 상품들을 나열합니다.
         const arrangeCart = cartItems.cart;
         const cartItemData = arrangeCart.map((item)=> ({
@@ -78,9 +78,9 @@ const presentCart = async (userIdKey)=> {
             company: item.company,
             quantity: item.quantity,
         }));
-        if(cartItemData.length === 0){
+        /*if(cartItemData.length === 0){
             throw new Error ('장바구니에 상품이 출력 되지 않았습니다.')
-        };
+        };*/
         return cartItemData;
     } catch (err) {
         throw new Error (`${err.message}`)
@@ -115,7 +115,6 @@ const removeCart = async (userIdKey, cartId)=> {
         );
         //장바구니의 품목이 삭제되었는지 확인합니다.
         const isThisCartDeleted = await User.find({ cart: newCartId });
-        console.log(isThisCartDeleted);
         if(isThisCartDeleted.length !== 0) {
             throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
         };
@@ -137,16 +136,16 @@ const removeAllCart = async (userIdKey)=> {
         //해당 유저의 물품들의 내역을 표시합니다.
         const usersCart = await User.findById(userIdKey).populate('cart');
         //장바구니에 상품이 없다면 오류를 출력합니다.
-        if (usersCart.cart.length === 0){
+        /*if (usersCart.cart.length === 0){
             throw new Error ('현재 장바구니에 상품이 없습니다.');
-        }
+        }*/
         //장바구니에서 모든 상품을 삭제합니다.
         await User.findByIdAndUpdate(userIdKey, { $set: { cart: [] } });
         //만약 제대로 삭제되지 않았다면 오류를 출력합니다.
-        const isUsersCartDeleted = await User.findById(userIdKey).populate('cart');
+        /*const isUsersCartDeleted = await User.findById(userIdKey).populate('cart');
         if(isUsersCartDeleted.cart.length !== 0){
             throw new Error ('장바구니 상품이 삭제되지 않았습니다.')
-        };
+        };*/
         //참조되고 있던 cart document도 전부 삭제합니다.
         const cartIds = usersCart.cart.map((item)=> item._id);
         await Cart.deleteMany({ _id: { $in: cartIds } });

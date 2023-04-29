@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const {User} = require("../db/models/user-model");
+const {User} = require("../db/index");
 const jwt = require("jsonwebtoken");
 
 
@@ -11,9 +11,9 @@ const userSignUp = async (userInfo) => {
     const {email, fullName, password, phoneNumber, address} = userInfo;
 
     // 이메일 중복 검사
-    const emailDuplicate = await User.findOne({email});
+    const duplicatedEmail = await User.findOne({email}).lean();
 
-    if (emailDuplicate) {
+    if (duplicatedEmail) {
       throw new Error("이미 등록된 이메일입니다.");
     }
 
@@ -31,8 +31,6 @@ const userSignUp = async (userInfo) => {
 
     //사용자 정보 저장
     const savedUser = newUser.save();
-
-    return savedUser;
     
   } catch(err) {
     throw new Error(err);
@@ -43,7 +41,7 @@ const userSignUp = async (userInfo) => {
 const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const user = await User.findOne({email: email});
+  const user = await User.findOne({email: email}).lean();
 
 
   //이메일 일치 여부
@@ -64,17 +62,26 @@ const userLogin = async (loginInfo) => {
     id: user._id,
     email: user.email,
   }, 
-  "jwt-secret",
+  process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
-  return token;
+  const data = {
+    _id: user._id,
+    email: user.email,
+    fullName: user.fullName,
+    address: user.address,
+    phoneNumber: user.phoneNumber,
+    token: token,
+  }
+
+  return data;
 };
 
 //관리자 로그인
 const adminLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const admin = await User.findOne({email: email});
+  const admin = await User.findOne({email: email}).lean();
 
 
   //이메일 일치 여부
@@ -82,7 +89,7 @@ const adminLogin = async (loginInfo) => {
     throw new Error ("이메일 또는 패스워드가 일치하지 않습니다.");
   }
 
-  const userPassword = await bcrypt.compare(password, user.password);
+  const userPassword = await bcrypt.compare(password, admin.password);
   
 
   //비밀번호 일치 여부
@@ -94,17 +101,25 @@ const adminLogin = async (loginInfo) => {
   const token = jwt.sign({
     id: admin._id,
     email: admin.email,
-    role: admin.role
   }, 
-  "jwt-secret",
+  process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
-  return token;
+  const data = {
+    _id: admin._id,
+    email: admin.email,
+    fullName: admin.fullName,
+    address: admin.address,
+    phoneNumber: admin.phoneNumber,
+    token: token,
+  }
+
+  return data;
 };
 
 //유저 정보 확인
 const checkUserData = async (userId) => {
-  const user = await User.findOne({_id: userId});
+  const user = await User.findOne({_id: userId}).lean();
 
   //유저가 존재하지 않을 경우
   if (!user) {
@@ -124,7 +139,7 @@ const checkUserData = async (userId) => {
 //유저 정보 수정 
 const updateUser = async (userId, currentPassword, newInfo) => {
   try {
-    const user = await User.findOne({_id: userId});
+    const user = await User.findOne({_id: userId}).lean();
     if (!user) throw new Error("가입 내역이 없습니다.");
 
     // 현재 비밀번호 확인
@@ -150,7 +165,7 @@ const updateUser = async (userId, currentPassword, newInfo) => {
     }
 
     // 유저 정보 업데이트
-    await User.updateOne({ userId }, updateData);
+    return await User.updateOne({_id: userId}, updateData).lean();
   } catch (err) {
     throw err;
   }
@@ -159,7 +174,7 @@ const updateUser = async (userId, currentPassword, newInfo) => {
 //유저 데이터 삭제
 const deleteUser = async (userId) => {
   try {
-    await User.deleteOne({_id: userId});
+    return await User.deleteOne({_id: userId}).lean();
   } catch(err) {
     throw err;
   }

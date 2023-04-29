@@ -1,23 +1,21 @@
 const { Router } = require('express');
-const CategoryController = require('../controller/category-controller');
+const {categoryController} = require('../controller/index');
 const categoryRouter = Router();
 
 // 카테고리 생성
-categoryRouter.post('/add', CategoryController.createCategory);
+categoryRouter.post('/add', categoryController.createCategory);
 
 // 전체 카테고리 조회
-categoryRouter.get('/', CategoryController.getAllCategory);
+categoryRouter.get('/', categoryController.getAllCategory);
 
-// major 카테고리 조회
-categoryRouter.get('/:major', CategoryController.findMajorCategory);
+// 특정 카테고리 조회
+categoryRouter.get('/:name', categoryController.findCategoryName);
 
-// major 카테고리 이름 수정
-categoryRouter.patch('/:major', CategoryController.updateMajorCategory);
+// 특정 카테고리 이름 수정
+categoryRouter.put('/:name', categoryController.updateCategory);
 
-// 메이저 카테고리 삭제 기능
-categoryRouter.delete('/:major', CategoryController.deleteMajorCategory);
+// 특정 카테고리 삭제 기능
+categoryRouter.delete('/:name', categoryController.deleteCategory);
 
-// minor 카테고리만 삭제하는 기능
-categoryRouter.delete('/:major/:minor', CategoryController.deleteMinorCategory);
 
 module.exports = categoryRouter;

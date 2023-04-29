@@ -5,7 +5,15 @@ const OrderSchema = new Schema({
     customerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
+    },
+    customerName: {
+      type: String,
+      required: false,
+    },
+    customerEmail: {
+      type: String,
+      required: false,
     },
     customerPhoneNumber: {
         type: String,
@@ -23,6 +31,7 @@ const OrderSchema = new Schema({
     cart: [{
       type: Schema.Types.ObjectId,
       ref: 'Cart',
+      required: false,
     }],
     total: {
         type: Number,
