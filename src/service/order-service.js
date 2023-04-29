@@ -124,7 +124,7 @@ const nonMemberAddOrder = async(orderInfo) => {
     } = orderInfo;
     
     //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
-    if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
+    if (!customerPhoneNumber|| !customerAddress || !total) {
       throw new Error("정보를 모두 입력해주세요.");
     }
 
