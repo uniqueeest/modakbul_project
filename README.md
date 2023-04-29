@@ -1,7 +1,54 @@
-## 벡엔드 구현 설명입니다.
+## 모닥불 API 명세서
 
 ---
 
-- 각 폴더마다 index.js 파일이 생성되어있습니다. 일단은 각 폴더의 js파일을 index.js로 import해서 export를 하는 역할로 생각하고 있는데, 이것은 상의 후 결정하면 좋겠습니다.
-- install된 패키지는 최신버전이 아닌 최신안정버전으로 설치를 진행했습니다. 설치 버전을 변경해야 되는 경우나 버전이 잘못된 경우 디스코드에서 상의 후 버전을 변경하면 될 것 같습니다.
-- 스키마는 ./db/schemas에서 생성하면 될 것 같습니다.
+## API 명세서
+
+### 유저 정보
+
+| Method | URI                    | Description      |
+| ------ | ---------------------- | ---------------- |
+| POST   | /api/users/sign-up     | 회원가입         |
+| POST   | /api/users/login       | 로그인           |
+| POST   | /api/users/admin-login | 관리자) 로그인   |
+| GET    | /api/users/:userId     | 사용자 정보 조회 |
+| PUT    | /api/users/:userId     | 사용자 정보 수정 |
+| DELETE | /api/users/:email      | 사용자 정보 삭제 |
+
+### 상품 정보
+
+| Method | URI                      | Description          |
+| ------ | ------------------------ | -------------------- |
+| GET    | /api/products            | 모든 상품 정보 조회  |
+| GET    | /api/products/:name      | 특정 상품 조회       |
+| POST   | /api/products/add        | 새로운 상품 등록     |
+| PATCH  | /api/products/:productId | 특정 상품 정보 수정  |
+| DELETE | /api/products/:name      | 특정 상품 정보 삭제  |
+| GET    | /api/categories          | 전체 카테고리 조회   |
+| GET    | /api/categories/:name    | 특정 카테고리 조회   |
+| POST   | /api/categories/add      | 새로운 카테고리 등록 |
+| PUT    | /api/categories/:name    | 특정 카테고리 수정   |
+| DELETE | /api/categories/:name    | 특정 카테고리 삭제   |
+
+### 장바구니 정보
+
+| Method | URI                          | Description                  |
+| ------ | ---------------------------- | ---------------------------- |
+| POST   | /api/carts/new               | 장바구니 추가                |
+| GET    | /api/carts/view              | 모든 장바구니 상품 조회      |
+| DELETE | /api/carts/deleteOne/:cartId | 특정 장바구니 상품 개별 삭제 |
+| DELETE | /api/carts/deleteAll         | 전체 장바구니 상품 삭제      |
+
+### 주문 정보
+
+| Method | URI                           | Description                 |
+| ------ | ----------------------------- | --------------------------- |
+| GET    | /api/orders/admin/:adminId    | 관리자)모든 주문 정보 조회  |
+| GET    | /api/orders/order/:userId     | 모든 주문 정보 조회         |
+| GET    | /api/orders/:orderNumber      | 비회원) 주문 정보 조회      |
+| POST   | /api/orders                   | 주문 추가                   |
+| POST   | /api/orders/nonmember         | 비회원) 주문 추가           |
+| PATCH  | /api/orders/:orderId          | 특정 주문 정보 수정         |
+| PATCH  | /api/orders/:adminId/:orderId | 관리자) 특정 주문 정보 수정 |
+| DELETE | /api/orders/:orderId          | 주문 취소                   |
+| DELETE | /api/orders/:adminId/:orderId | 관리자) 주문 취소           |
