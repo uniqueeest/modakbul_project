@@ -25,9 +25,9 @@
 | PATCH  | /api/products/:productId | 특정 상품 정보 수정  |
 | DELETE | /api/products/:name      | 특정 상품 정보 삭제  |
 | GET    | /api/categories          | 전체 카테고리 조회   |
-| GET    | /api/categories/:name    | 특정 카테고리 조회   |
+| GET    | /api/categories/:name    | 특정 카테고리 조회   |
 | POST   | /api/categories/add      | 새로운 카테고리 등록 |
-| PUT    | /api/categories/:name    | 특정 카테고리 수정   |
+| PUT    | /api/categories/:name    | 특정 카테고리 수정   |
 | DELETE | /api/categories/:name    | 특정 카테고리 삭제   |
 
 ### 장바구니 정보
