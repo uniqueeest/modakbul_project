@@ -41,7 +41,7 @@ const userSignUp = async (userInfo) => {
 const userLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const user = await User.findOne({email: email}).lean();
+  const user = await User.findOne({email}).lean();
 
 
   //이메일 일치 여부
@@ -61,16 +61,12 @@ const userLogin = async (loginInfo) => {
   const token = jwt.sign({
     id: user._id,
     email: user.email,
+    role: user.role,
   }, 
   process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
   const data = {
-    _id: user._id,
-    email: user.email,
-    fullName: user.fullName,
-    address: user.address,
-    phoneNumber: user.phoneNumber,
     token: token,
   }
 
@@ -81,7 +77,7 @@ const userLogin = async (loginInfo) => {
 const adminLogin = async (loginInfo) => {
   const {email, password} = loginInfo;
   
-  const admin = await User.findOne({email: email}).lean();
+  const admin = await User.findOne({email}).lean();
 
 
   //이메일 일치 여부
@@ -101,16 +97,12 @@ const adminLogin = async (loginInfo) => {
   const token = jwt.sign({
     id: admin._id,
     email: admin.email,
+    role: admin.role,
   }, 
   process.env.ACCESS_TOKEN_SECRET,
   {expiresIn: "1h"} );
 
   const data = {
-    _id: admin._id,
-    email: admin.email,
-    fullName: admin.fullName,
-    address: admin.address,
-    phoneNumber: admin.phoneNumber,
     token: token,
   }
 
