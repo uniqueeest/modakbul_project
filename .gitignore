@@ -1,6 +1,7 @@
 # Dependencies
 .vscode
 .idea
+.DS_Store
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,visualstudiocode

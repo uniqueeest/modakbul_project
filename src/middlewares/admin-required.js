@@ -1,10 +1,8 @@
-const {User} = require("../db/index");
-
 //admin 검증 
 const adminMiddleware = async(req, res, next) => {
   try {
-    const {adminId} = req.params;
-    const admin = await User.findOne({_id: adminId});
+    const admin = req.user;
+    console.log(admin);
 
     //관리자인지 확인
     if (admin.role !== "admin") {

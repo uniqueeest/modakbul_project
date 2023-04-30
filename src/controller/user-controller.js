@@ -31,7 +31,7 @@ const adminLogin = async (req, res) => {
   const loginInfo = req.body;
 
   try {
-    const data = await userService.userLogin(loginInfo);
+    const data = await userService.adminLogin(loginInfo);
     const admin = await User.findOne({email: req.body.email});
 
     if (admin.role !== "admin") {
@@ -40,7 +40,7 @@ const adminLogin = async (req, res) => {
       });
     }
 
-    const adminData = {data, role: admin.role}
+    const adminData = {data}
     res.status(200).json(utils.buildResponse(adminData));
   } catch(err) {
     console.log(err);
