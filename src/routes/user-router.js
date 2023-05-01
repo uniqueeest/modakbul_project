@@ -12,6 +12,9 @@ userRouter.post("/login", userController.userLogin);
 //관리자 로그인
 userRouter.post("/admin-login", userController.adminLogin);
 
+//유저, 관리자 정보 반환
+userRouter.get("/myPage", authMiddleware, userController.returnData);
+
 // 유저 정보 확인
 userRouter.get("/:userId", authMiddleware, userController.getUser);
 

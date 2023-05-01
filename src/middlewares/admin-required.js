@@ -2,7 +2,6 @@
 const adminMiddleware = async(req, res, next) => {
   try {
     const admin = req.user;
-    console.log(admin);
 
     //관리자인지 확인
     if (admin.role !== "admin") {

@@ -40,13 +40,22 @@ const adminLogin = async (req, res) => {
       });
     }
 
-    const adminData = {data}
-    res.status(200).json(utils.buildResponse(adminData));
+    res.status(200).json(utils.buildResponse(data));
   } catch(err) {
     console.log(err);
     res.status(400).send(`${err}`);
   }
 };
+
+const returnData = async (req, res) => {
+  try {
+    const userData = req.user;
+
+    res.status(200).json(utils.buildResponse(userData));
+  } catch(err) {
+    next(err);
+  }
+}
 
 const getUser = async (req, res, next) => {
   try {
@@ -102,6 +111,7 @@ const userController = {
   signUp,
   userLogin,
   adminLogin,
+  returnData,
   getUser,
   createUser,
   deleteUser

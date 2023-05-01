@@ -30,7 +30,7 @@ const userSignUp = async (userInfo) => {
     })
 
     //사용자 정보 저장
-    const savedUser = newUser.save();
+    await newUser.save();
     
   } catch(err) {
     throw new Error(err);
