@@ -47,6 +47,17 @@ const adminLogin = async (req, res) => {
   }
 };
 
+const returnUserData = async (req, res) => {
+  try {
+    const userData = req.user;
+
+
+    res.status(200).json(utils.buildResponse(userData));
+  } catch(err) {
+    next(err);
+  }
+}
+
 const getUser = async (req, res, next) => {
   try {
     const {userId} = req.params;
@@ -101,6 +112,7 @@ const userController = {
   signUp,
   userLogin,
   adminLogin,
+  returnUserData,
   getUser,
   createUser,
   deleteUser
