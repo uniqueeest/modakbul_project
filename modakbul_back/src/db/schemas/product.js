@@ -2,7 +2,6 @@ const { Schema } = require('mongoose');
 // 상품명, 가격, 카테고리, 설명, 요약, 회사, 재고
 
 const ProductSchema = new Schema ({
-
   //이름
   name: {
     type: String,
@@ -19,11 +18,6 @@ const ProductSchema = new Schema ({
     required: true,
     ref: 'Category'
   },
-  // category: {
-  //   type: String,
-  //   required: true
-  // },
-  //설명
   description: { 
     type: String,
     required: true,
