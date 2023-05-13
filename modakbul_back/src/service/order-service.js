@@ -62,11 +62,6 @@ const addOrder = async(orderInfo) => {
       total
     } = orderInfo;
     const order = await User.findOne({_id: customerId}).lean();
-    
-    //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
-    if (!customerPhoneNumber|| !customerAddress || !cart || !total) {
-      throw new Error("정보를 모두 입력해주세요.");
-    }
 
     //주문번호 생성 함수 구현
     const createDateYYMMDD = () => {
@@ -122,11 +117,6 @@ const nonMemberAddOrder = async(orderInfo) => {
       orderStatus, 
       total
     } = orderInfo;
-    
-    //하나라도 없을 시 error (orderStatus는 default이므로 넣지 않음)
-    if (!customerPhoneNumber|| !customerAddress || !total) {
-      throw new Error("정보를 모두 입력해주세요.");
-    }
 
     //주문번호 생성 함수 구현
     const createDateYYMMDD = () => {
