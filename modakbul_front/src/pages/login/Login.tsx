@@ -14,11 +14,11 @@ const Login = () => {
   
 
   //입력 여부 확인
-  const emailValue = (e:any) => {
+  const emailValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const passwordValue = (e:any) => {
+  const passwordValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   }
 
@@ -74,6 +74,7 @@ const Login = () => {
 export default Login;
 
 const LoginSection = styled.section`
+  margin-bottom: 20rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -94,6 +95,7 @@ const LoginHeader = styled.h2`
 const LoginLabel = styled.p`
   margin-left: 0.5rem;
   font-size: 1.2rem;
+  color: #B7B7B7;
 `
 
 const LoginInput = styled.input`
@@ -130,6 +132,7 @@ const LoginButton = styled.button`
 
   &:hover{  
     background-color : #20262E;
+    transition: ease-in 0.2s;
   }
 `;
 
@@ -155,6 +158,7 @@ const NonUserOrderButton = styled.button`
   &:hover{  
     background-color : black;
     color: white;
+    transition: ease-in 0.2s;
   }
 `;
 

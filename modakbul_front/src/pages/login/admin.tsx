@@ -72,6 +72,7 @@ const Login = () => {
 export default Login;
 
 const LoginSection = styled.section`
+  margin-bottom: 23rem;
   display: flex;
   flex-direction: column;
   align-items: center;
