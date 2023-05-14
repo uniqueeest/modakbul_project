@@ -14,11 +14,11 @@ const Login = () => {
   
 
   //입력 여부 확인
-  const emailValue = (e:any) => {
+  const emailValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const passwordValue = (e:any) => {
+  const passwordValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   }
 

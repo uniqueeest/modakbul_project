@@ -17,7 +17,7 @@ const MyPage = () => {
         <MainItemTitle>회원 정보</MainItemTitle>
         <MainItemDesc>고객님의 개인정보를 수정할 수 있습니다.</MainItemDesc>
       </MainItem>
-      <MainItem to="/">
+      <MainItem to="/cart">
         <MainItemTitle>장바구니</MainItemTitle>
         <MainItemDesc>장바구니에 담은 내역을 확인하실 수 있습니다.</MainItemDesc>
       </MainItem>

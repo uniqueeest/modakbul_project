@@ -11,7 +11,7 @@ const Header = () => {
         <HeaderLink to="/sign-up">회원가입</HeaderLink>
         <HeaderLink to="/login">로그인</HeaderLink>
         <HeaderLink to="/my-page">마이페이지</HeaderLink>
-        <HeaderLink to="/products">장바구니</HeaderLink>
+        <HeaderLink to="/cart">장바구니</HeaderLink>
       </LinkTab>
     </HeaderSection>
   );
