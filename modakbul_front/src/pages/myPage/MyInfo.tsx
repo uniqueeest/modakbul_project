@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate, NavLink  } from 'react-router-dom';
 import styled, {createGlobalStyle} from 'styled-components';
+import Post from '../../components/Post';
 import axios from "axios";
 
 const MyInfo = () => {
@@ -19,8 +20,8 @@ const MyInfo = () => {
         <MyInfoInput type='password' />
         <MyInfoLabel>전화번호</MyInfoLabel>
         <MyInfoInput />
-        <MyInfoLabel>주소</MyInfoLabel>
-        <MyInfoInput />
+        <AddressLabel>주소</AddressLabel>
+        <Post />
       </MyInfoContainer> 
       <ButtonContainer>
         <PutButton>회원 정보 수정</PutButton>
@@ -63,6 +64,12 @@ const MyInfoContainer = styled.div`
 const MyInfoLabel = styled.p`
   font-family: 'Noto Sans KR', sans-serif;
   color: black;
+`
+
+const AddressLabel = styled.p`
+  font-family: 'Noto Sans KR', sans-serif;
+  color: black;
+  margin-bottom: 0;
 `
 
 const MyInfoInput = styled.input`

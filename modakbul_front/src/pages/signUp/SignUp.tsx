@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import styled, {createGlobalStyle} from 'styled-components';
+import Post from '../../components/Post';
 import axios from "axios";
 
 const SignUp = () => {
@@ -33,9 +34,6 @@ const SignUp = () => {
     setPhoneNumber(e.target.value);
   }
 
-  const addressValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
-  }
 
   const clickHandler = () => {
     const nameRegex = /^[가-힣]{2,4}$/;
@@ -83,8 +81,8 @@ const SignUp = () => {
         <SignUpInput type='password' value={rePassword} onChange={rePasswordValue}/>
         <SignUpLabel>휴대폰 번호</SignUpLabel>
         <SignUpInput value={phoneNumber} onChange={phoneNumberValue}/>
-        <SignUpLabel>주소</SignUpLabel>
-        <SignUpInput value={address} onChange={addressValue}/>
+        <AddressLabel>주소</AddressLabel>
+        <Post />
         <SignUpButton onClick={clickHandler}>회원가입</SignUpButton>
       </SignUpContainer>
     </SignUpSection>
@@ -113,10 +111,16 @@ const SignUpLabel = styled.p`
   color: #B7B7B7;
 `
 
-const SignUpInput = styled.input`
-  height: 2.5rem;
-  font-size: 16px;
+const AddressLabel = styled.p`
+  margin-bottom: 0;
+  font-family: 'Noto Sans KR', sans-serif;
   color: #B7B7B7;
+`
+
+const SignUpInput = styled.input`
+  height: 2rem;
+  font-size: 16px;
+  color: black;
   border-radius: 7px;
   border: 1px solid #B7B7B7;;
 `
